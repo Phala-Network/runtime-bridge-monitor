@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "baseui": "^9.115.2",
+    "bunyan": "^1.8.15",
+    "decimal.js": "^10.2.1",
     "next": "10.2.2",
+    "protobufjs": "^6.11.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "styletron-engine-atomic": "^1.4.8",
