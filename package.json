@@ -11,12 +11,16 @@
     "baseui": "^9.115.2",
     "bunyan": "^1.8.15",
     "decimal.js": "^10.2.1",
-    "next": "10.2.2",
+    "ioredis": "^4.27.2",
+    "next": "^10.2.2",
+    "p-queue": "^7.1.0",
     "protobufjs": "^6.11.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "redis-commands": "^1.7.0",
     "styletron-engine-atomic": "^1.4.8",
-    "styletron-react": "^6.0.1"
+    "styletron-react": "^6.0.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.24.0",
@@ -30,6 +34,7 @@
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-sort-imports-es6-autofix": "^0.6.0",
+    "next-transpile-modules": "^7.2.0",
     "prettier": "^2.3.0",
     "typescript": "^4.2.4"
   }

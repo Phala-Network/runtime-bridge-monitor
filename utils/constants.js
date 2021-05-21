@@ -16,17 +16,6 @@ export const PHALA_ZERO_ACCOUNT =
 export const EVENTS_STORAGE_KEY = 'EVENTS_STORAGE_KEY'
 export const GRANDPA_AUTHORITIES_KEY = ':grandpa_authorities'
 
-export const SYNC_HEADER_REQ_EMPTY = Object.freeze({
-  headers_b64: null,
-  authority_set_change_b64: null,
-  headers: null,
-  authoritySetChange: null,
-})
-export const DISPATCH_BLOCK_REQ_EMPTY = Object.freeze({
-  blocks_b64: null,
-  blocks: null,
-})
-
 export const PHALA_SS58_FORMAT = 30
 export const ROCOCO_SS58_FORMAT = 42
 
@@ -40,4 +29,5 @@ export const BALANCE_10K_PHA = new BN(BALANCE_10K_PHA_STRING)
 export const MINIUM_BALANCE_STRING = BALANCE_10K_PHA_STRING
 export const MINIUM_BALANCE = BALANCE_10K_PHA
 
-export const TX_QUEUE_SIZE = 200
+export const REDIS_ENDPOINT =
+  process.env.REDIS_ENDPOINT || 'redis://127.0.0.1:6379'

@@ -39,4 +39,7 @@ module.exports = {
       version: 'detect',
     },
   },
+  globals: {
+    __server_import: 'readonly',
+  },
 }

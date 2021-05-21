@@ -1,13 +1,10 @@
 import { list as redisCommands } from 'redis-commands'
 import Redis from 'ioredis'
-import pQueue from 'p-queue'
-
 import logger from '../utils/logger'
 
-const { default: Queue } = pQueue
-
-const createClient = (redisEndpoint) =>
-  new Promise((resolve) => {
+const createClient = async (redisEndpoint) => {
+  const { default: Queue } = await __server_import('p-queue')
+  return new Promise((resolve) => {
     const queue = new Queue({
       timeout: 3000,
       throwOnTimeout: true,
@@ -46,5 +43,6 @@ const createClient = (redisEndpoint) =>
       logger.error('REDIS ERROR!', e)
     })
   })
+}
 
 export default createClient

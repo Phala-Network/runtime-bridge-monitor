@@ -1,9 +1,7 @@
 import path from 'path'
 import protobuf from 'protobufjs'
 
-const __dirname = path.dirname(import.meta.url).replace(/^file:\/\/\//, '/')
-const protoPath = path.join(__dirname, '../vendor/proto/message.proto')
-
+const protoPath = path.join(process.cwd(), './vendor/proto/message.proto')
 const protoRoot = protobuf.loadSync(protoPath)
 
 if (process.env.NODE_ENV === 'development') {
