@@ -32,3 +32,19 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+.netlify
+
+.env*
+!.env.development
+
+# gatsby files
+.cache/
+dist
+.eslintcache
+pids
+*.pid
+*.seed
+*.pid.lock
+#webStorm
+.idea/
