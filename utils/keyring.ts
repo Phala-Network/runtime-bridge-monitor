@@ -2,7 +2,7 @@ import { Keyring } from '@polkadot/keyring'
 import { PHALA_SS58_FORMAT } from './constants'
 import { cryptoWaitReady } from '@polkadot/util-crypto'
 
-const createKeyring = async () => {
+const createKeyring = async (): Promise<Keyring> => {
   await cryptoWaitReady()
   return new Keyring({
     type: 'sr25519',

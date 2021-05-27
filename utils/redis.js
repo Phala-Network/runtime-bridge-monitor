@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { list as redisCommands } from 'redis-commands'
 import Redis from 'ioredis'
 import logger from '../utils/logger'

@@ -26,6 +26,7 @@ module.exports = {
   },
   plugins: ['sort-imports-es6-autofix'],
   rules: {
+    'comma-dangle': 'off',
     'no-unused-vars': 'off',
     'prettier/prettier': [
       'error',

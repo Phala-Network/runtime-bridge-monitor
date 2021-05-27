@@ -8,6 +8,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "@phala/typedefs": "^0.1.1",
+    "@polkadot/keyring": "^6.5.1",
+    "@polkadot/types": "^4.11.2",
+    "@polkadot/util": "^6.5.1",
+    "@polkadot/util-crypto": "^6.5.1",
     "@types/node": "^15.6.1",
     "baseui": "^9.115.2",
     "bunyan": "^1.8.15",
@@ -24,6 +29,9 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/bn.js": "^5.1.0",
+    "@types/bunyan": "^1.8.6",
+    "@types/ioredis": "^4.26.4",
     "@types/react": "^17.0.8",
     "@types/react-dom": "^17.0.5",
     "@types/styletron-engine-atomic": "^1.1.0",

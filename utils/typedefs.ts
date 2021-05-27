@@ -1,6 +1,7 @@
 import { typesChain } from '@phala/typedefs'
 
 export const chainTypes = typesChain['Phala Development']
+
 export const bridgeTypes = {
   SetId: 'u64',
   StorageProof: 'Vec<Vec<u8>>',
@@ -39,7 +40,6 @@ export const bridgeTypes = {
     computeWorkersKv: '(EncodedU8StorageKey, u32)',
     proof: 'StorageProof',
   },
-  // PalletId: 'Raw',
   StashWorkerStats: {
     slash: 'Balance',
     computeReceived: 'Balance',
