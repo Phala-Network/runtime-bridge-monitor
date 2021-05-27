@@ -5,22 +5,34 @@ module.exports = {
     node: true,
   },
   extends: [
-    'plugin:react/recommended',
-    'standard',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:import/errors',
+    'plugin:import/typescript',
+    'plugin:import/warnings',
+    'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended',
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'standard-with-typescript',
   ],
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
-    ecmaVersion: 12,
-    sourceType: 'module',
+    "ecmaVersion": 2021,
+    "project": 'tsconfig.json',
+    "sourceType": "module"
   },
-  plugins: ['@typescript-eslint', 'react', 'sort-imports-es6-autofix'],
+  plugins: ['sort-imports-es6-autofix'],
   rules: {
-    // 'no-use-before-define': 'off',
     'no-unused-vars': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
     'sort-imports-es6-autofix/sort-imports-es6': [
       'error',
       {

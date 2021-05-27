@@ -1,0 +1,53 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "allowJs": true,
+        "alwaysStrict": true,
+        "checkJs": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "noEmit": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": true,
+        "noUnusedLocals": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "target": "esnext",
+        "paths": {
+            "@phala/types": [
+                "./libs/polkadot/interfaces/types.ts"
+            ],
+            "@polkadot/api/augment": [
+                "./libs/polkadot/interfaces/augment-api.ts"
+            ],
+            "@polkadot/types/augment": [
+                "./libs/polkadot/interfaces/augment-types.ts"
+            ]
+        }
+    },
+    "include": [
+        "**/*.js",
+        "**/*.jsx",
+        "**/*.ts",
+        "**/*.tsx",
+        "libs/polkadot/interfaces/augment.d.ts",
+        "next-env.d.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ],
+    "files": [
+        "pages/_app.tsx"
+    ]
+}
