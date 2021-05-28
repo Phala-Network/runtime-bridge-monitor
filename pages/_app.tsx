@@ -1,6 +1,5 @@
 import { Poc4 } from '@phala/typedefs'
 import { BaseProvider, LightTheme } from 'baseui'
-import { LayersManager } from 'baseui/layer'
 import { StyledSpinnerNext } from 'baseui/spinner'
 import { PLACEMENT as ToastPlacement, toaster, ToasterContainer } from 'baseui/toast'
 import { AppComponent, AppProps } from 'next/dist/next-server/lib/router/router'
@@ -54,11 +53,9 @@ const App: AppComponent = ({ Component, pageProps }: AppProps) => {
       <QueryClientProvider client={client}>
         <StyletronProvider value={styletron}>
           <BaseProvider theme={LightTheme}>
-            <LayersManager>
-              <GlobalFetchingToasterContainer>
-                <Component {...pageProps} />
-              </GlobalFetchingToasterContainer>
-            </LayersManager>
+            <GlobalFetchingToasterContainer>
+              <Component {...pageProps} />
+            </GlobalFetchingToasterContainer>
           </BaseProvider>
         </StyletronProvider>
       </QueryClientProvider>
