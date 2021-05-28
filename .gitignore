@@ -1,52 +1,8 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-env.development.config.js
-env.config.js
-
-# vercel
-.vercel
-
-.netlify
-
-.env*
-!.env.development
-
-# gatsby files
-.cache/
-dist
-.eslintcache
-pids
-*.pid
-*.seed
-*.pid.lock
-#webStorm
-.idea/
+.next
+.npmrc
+vendor/interfaces/*
+vendor/interfaces/phalaPoc4/*
+!vendor/interfaces/definitions.ts
+!vendor/interfaces/phalaPoc4
+!vendor/interfaces/phalaPoc4/definitions.ts
+node_modules

@@ -30,4 +30,4 @@ export const MINIUM_BALANCE_STRING = BALANCE_10K_PHA_STRING
 export const MINIUM_BALANCE = BALANCE_10K_PHA
 
 export const REDIS_ENDPOINT =
-  process.env.REDIS_ENDPOINT || 'redis://127.0.0.1:6379'
+  process.env.REDIS_ENDPOINT ?? 'redis://127.0.0.1:6379'

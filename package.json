@@ -5,10 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "typegen:defs": "ts-node --skip-project node_modules/@polkadot/typegen/scripts/polkadot-types-from-defs.cjs --package '.' --input ./vendor/interfaces",
+    "typegen:meta": "ts-node --skip-project node_modules/@polkadot/typegen/scripts/polkadot-types-from-chain.cjs --package '.' --endpoint wss://poc4.phala.network/ws --output ./vendor/interfaces"
   },
   "dependencies": {
     "@phala/typedefs": "^0.1.1",
+    "@polkadot/api": "^4.11.2",
     "@polkadot/keyring": "^6.5.1",
     "@polkadot/types": "^4.11.2",
     "@polkadot/util": "^6.5.1",
@@ -23,12 +26,14 @@
     "protobufjs": "^6.11.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-query": "^3.16.0",
     "redis-commands": "^1.7.0",
     "styletron-engine-atomic": "^1.4.8",
     "styletron-react": "^6.0.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@polkadot/typegen": "^4.11.2",
     "@types/bn.js": "^5.1.0",
     "@types/bunyan": "^1.8.6",
     "@types/ioredis": "^4.26.4",
@@ -36,6 +41,7 @@
     "@types/react-dom": "^17.0.5",
     "@types/styletron-engine-atomic": "^1.1.0",
     "@types/styletron-react": "^5.0.2",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
     "eslint": "^7.26.0",
