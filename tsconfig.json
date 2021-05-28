@@ -3,7 +3,7 @@
     "compilerOptions": {
         "allowJs": true,
         "alwaysStrict": true,
-        "checkJs": true,
+        "checkJs": false,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "isolatedModules": true,
@@ -26,13 +26,13 @@
         "target": "esnext",
         "paths": {
             "@phala/types": [
-                "./libs/polkadot/interfaces/types.ts"
+                "./vendor/interfaces/types.ts"
             ],
             "@polkadot/api/augment": [
-                "./libs/polkadot/interfaces/augment-api.ts"
+                "./vendor/interfaces/augment-api.ts"
             ],
             "@polkadot/types/augment": [
-                "./libs/polkadot/interfaces/augment-types.ts"
+                "./vendor/interfaces/augment-types.ts"
             ]
         }
     },
@@ -41,8 +41,8 @@
         "**/*.jsx",
         "**/*.ts",
         "**/*.tsx",
-        "libs/polkadot/interfaces/augment.d.ts",
-        "next-env.d.ts"
+        "next-env.d.ts",
+        "vendor/interfaces/augment.d.ts"
     ],
     "exclude": [
         "node_modules"
