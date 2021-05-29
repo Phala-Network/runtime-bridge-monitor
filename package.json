@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "pbjs": "pbjs -t static-module -o ./vendor/proto-types/proto.js ./vendor/proto/error.proto ./vendor/proto/message.proto",
+    "pbts": "pbjs -t static-module ./vendor/proto/error.proto ./vendor/proto/message.proto | pbts -o ./vendor/proto-types/proto.d.ts -",
     "typegen:defs": "ts-node --skip-project node_modules/@polkadot/typegen/scripts/polkadot-types-from-defs.cjs --package '.' --input ./vendor/interfaces",
     "typegen:meta": "ts-node --skip-project node_modules/@polkadot/typegen/scripts/polkadot-types-from-chain.cjs --package '.' --endpoint wss://poc4.phala.network/ws --output ./vendor/interfaces"
   },

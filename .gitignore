@@ -5,4 +5,6 @@ vendor/interfaces/phalaPoc4/*
 !vendor/interfaces/definitions.ts
 !vendor/interfaces/phalaPoc4
 !vendor/interfaces/phalaPoc4/definitions.ts
+vendor/proto-types/*
+!vendor/proto-types/.gitkeep
 node_modules
