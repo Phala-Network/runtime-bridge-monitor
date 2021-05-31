@@ -1,3 +1,3 @@
 [submodule "vendor/proto"]
 	path = vendor/proto
-	url = https://github.com/Phala-Network/runtime-bridge-proto.git
+	url = ../runtime-bridge-proto.git
