@@ -6,9 +6,14 @@ let devEnvConfig = {}
 
 try {
   envConfig = require('./env.config')
-  devEnvConfig = require('./env.development.config')
 } catch (error) {
   console.warn('Failed to load env config, skipping...')
+}
+
+try {
+  devEnvConfig = require('./env.development.config')
+} catch (error) {
+  console.warn('Failed to load env.development config, skipping...')
 }
 
 const baseConfig = {

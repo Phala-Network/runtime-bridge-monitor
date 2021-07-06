@@ -15,7 +15,7 @@ const setServer = async () => {
 
   const tunnelConnection = await createMessageTunnel({
     redisEndpoint: REDIS_ENDPOINT,
-    from: MessageTarget.values.MTG_MANAGER,
+    from: MessageTarget.values.MTG_APP,
   })
 
   const { subscribe, query } = tunnelConnection
@@ -25,11 +25,7 @@ const setServer = async () => {
     plainHandlers: {},
     dispatch: (message) => {
       try {
-        if (
-          message.to === 'MTG_BROADCAST' ||
-          message.to === 'MTG_MANAGER' ||
-          message.to === 'MTG_WORKER'
-        ) {
+        if (message.to === 'MTG_BROADCAST' || message.to === 'MTG_APP') {
           switch (message.type) {
             case 'MTP_QUERY':
               dispatcher.queryCallback(injectMessage(message))
