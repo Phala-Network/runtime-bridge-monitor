@@ -1,6 +1,6 @@
 import { Card, StyledBody } from 'baseui/card'
 import { ListItem, ListItemLabel } from 'baseui/list'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import Head from 'next/head'
 import dayjs from 'dayjs'
@@ -11,6 +11,7 @@ dayjs.extend(relativeTime)
 const fetcher = ({ queryKey: [url] }) => fetch(url).then((r) => r.json())
 
 export default function Home() {
+  const blockPerSecBuffer = useRef([])
   const [previousData, setPreviousData] = useState(null)
   const [blockPerSec, setBlockPerSec] = useState(0)
   const { data } = useQuery('/api/fetch_status', fetcher, {
@@ -23,7 +24,12 @@ export default function Home() {
 
     if (previousData !== data) {
       setPreviousData(data)
-      setBlockPerSec(data?.blobHeight - _p?.blobHeight || 0)
+      const s = data?.blobHeight - _p?.blobHeight || 0
+      setBlockPerSec(s)
+      blockPerSecBuffer.current.push(s)
+      if (blockPerSecBuffer.current.length > 15) {
+        blockPerSecBuffer.current.shift()
+      }
     }
   }, [data])
 
@@ -33,8 +39,14 @@ export default function Home() {
   )
 
   const estimatedTime = useMemo(() => {
+    if (blockPerSec <= 0) {
+      return 'N/A'
+    }
+    const s =
+      blockPerSecBuffer.current.reduce((sum, i) => sum + i) /
+      blockPerSecBuffer.current.length
     const rest = data?.knownHeight - data?.blobHeight || 0
-    const sec = parseInt(rest / blockPerSec) || 0
+    const sec = parseInt(rest / s) || 0
     return dayjs().add(sec, 'second').fromNow(dayjs())
   }, [blockPerSec, data?.blobHeight, data?.knownHeight])
 
