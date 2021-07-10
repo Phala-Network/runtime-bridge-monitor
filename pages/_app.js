@@ -4,6 +4,7 @@ import { styletron } from '../styletron'
 
 import '../styles/globals.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import PageWrapper from '../components/PageWrapper'
 
 const queryClient = new QueryClient()
 
@@ -12,7 +13,9 @@ function MyApp({ Component, pageProps }) {
     <StyletronProvider value={styletron}>
       <BaseProvider theme={LightTheme}>
         <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
+          <PageWrapper>
+            <Component {...pageProps} />
+          </PageWrapper>
         </QueryClientProvider>
       </BaseProvider>
     </StyletronProvider>
