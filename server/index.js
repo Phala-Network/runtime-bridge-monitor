@@ -15,7 +15,7 @@ const setServer = async () => {
 
   const tunnelConnection = await createMessageTunnel({
     redisEndpoint: REDIS_ENDPOINT,
-    from: MessageTarget.values.MTG_APP,
+    from: MessageTarget.MTG_APP,
   })
 
   const { subscribe, query } = tunnelConnection

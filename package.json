@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "proto:build": "pbjs -t static-module --no-beautify -p ./vendor/proto -o ./message/proto.generated.js -w es6 ./vendor/proto/message.proto && pbts -o ./message/proto.generated.d.ts ./message/proto.generated.js && sed -i \"s/import \\* as $protobuf/import $protobuf/g\" ./message/proto.generated.js"
   },
   "dependencies": {
     "baseui": "^9.115.2",

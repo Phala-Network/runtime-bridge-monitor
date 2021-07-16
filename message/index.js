@@ -19,10 +19,10 @@ const createMessageTunnel = async ({ redisEndpoint, from, encode, decode }) => {
 
   const publish = async (request) => {
     const {
-      to = MessageTarget.values.MTG_BROADCAST,
+      to = MessageTarget.MTG_BROADCAST,
       nonce = '',
       nonceRef = '',
-      type = MessageType.values.MTP_BROADCAST,
+      type = MessageType.MTP_BROADCAST,
     } = request
     const _nonce = nonce || uuidv4()
     const createdAt = Date.now()
@@ -44,8 +44,8 @@ const createMessageTunnel = async ({ redisEndpoint, from, encode, decode }) => {
   const broadcast = (request) =>
     publish({
       ...request,
-      type: MessageType.values.MTG_BROADCAST,
-      to: MessageTarget.values.MTP_BROADCAST,
+      type: MessageType.MTG_BROADCAST,
+      to: MessageTarget.MTP_BROADCAST,
     })
 
   const query = (request) => {
@@ -63,7 +63,7 @@ const createMessageTunnel = async ({ redisEndpoint, from, encode, decode }) => {
         await publish({
           ...request,
           nonce,
-          type: MessageType.values.MTP_QUERY,
+          type: MessageType.MTP_QUERY,
         })
         return nonce
       })()
@@ -73,13 +73,13 @@ const createMessageTunnel = async ({ redisEndpoint, from, encode, decode }) => {
   const reply = (request) =>
     publish({
       ...request,
-      type: MessageType.values.MTP_REPLY,
+      type: MessageType.MTP_REPLY,
     })
 
   const notify = (request) =>
     publish({
       ...request,
-      type: MessageType.values.MTP_NOTIFY,
+      type: MessageType.MTP_NOTIFY,
     })
 
   const subscribe = (dispatcher) => {
@@ -155,7 +155,7 @@ const createDispatcher = ({
     const reply = await cb(message, tunnelConnection)
     await tunnelConnection.reply({
       ...reply,
-      to: MessageTarget.values[message.from],
+      to: MessageTarget[message.from],
       nonceRef: message.nonce,
     })
   }

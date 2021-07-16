@@ -74,7 +74,9 @@ export default function Home() {
           </ListItem>
           <ListItem>
             <ListItemLabel
-              description={<code>{data?.knownHeight - data?.blobHeight}</code>}
+              description={
+                <code>{data?.knownHeight - data?.blobHeight || 0}</code>
+              }
             >
               Blocks to reach target
             </ListItemLabel>

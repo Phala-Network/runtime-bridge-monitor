@@ -6,7 +6,7 @@ import logger from '../../utils/logger'
 const queryFetcherState = async () => {
   const { query } = await getServer()
   const { content: fetcherStateUpdate } = await query({
-    to: MessageTarget.values.MTG_FETCHER,
+    to: MessageTarget.MTG_FETCHER,
     callOnlineFetcher: {},
   })
   logger.debug(fetcherStateUpdate, 'fetcher state updated.')

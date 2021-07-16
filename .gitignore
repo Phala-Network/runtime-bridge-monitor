@@ -50,3 +50,4 @@ pids
 *.pid.lock
 #webStorm
 .idea/
+**/*.generated.**
