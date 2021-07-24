@@ -4,9 +4,9 @@ const PoolsPage = () => {
   return (
     <div>
       <Head>
-        <title>Pools Management</title>
+        <title>Pools</title>
       </Head>
-      <h1>Pools Management</h1>
+      <h1>Pools</h1>
     </div>
   )
 }

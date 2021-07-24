@@ -14,6 +14,7 @@
     "dayjs": "^1.10.6",
     "decimal.js": "^10.2.1",
     "ioredis": "^4.27.2",
+    "jotai": "^1.2.1",
     "next": "^10.2.2",
     "p-queue": "^7.1.0",
     "protobufjs": "^6.11.2",

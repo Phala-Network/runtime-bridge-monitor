@@ -65,29 +65,7 @@ export default function Home() {
           </ListItemLabel>
         </ListItem>
       ))}
-      {!data?.hasReachedInitTarget ? (
-        <>
-          <ListItem>
-            <ListItemLabel description={<code>{blockPerSec}</code>}>
-              Speed(block/s)
-            </ListItemLabel>
-          </ListItem>
-          <ListItem>
-            <ListItemLabel
-              description={
-                <code>{data?.knownHeight - data?.blobHeight || 0}</code>
-              }
-            >
-              Blocks to reach target
-            </ListItemLabel>
-          </ListItem>
-          <ListItem>
-            <ListItemLabel description={<code>{estimatedTime}</code>}>
-              Estimated finish time
-            </ListItemLabel>
-          </ListItem>
-        </>
-      ) : null}
+      {/* TODO: parachain ETA */}
     </div>
   )
 }
