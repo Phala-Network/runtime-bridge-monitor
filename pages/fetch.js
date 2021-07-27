@@ -2,21 +2,31 @@ import { ListItem, ListItemLabel } from 'baseui/list'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import Head from 'next/head'
+import axios from 'axios'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 dayjs.extend(relativeTime)
 
-const fetcher = ({ queryKey: [url] }) => fetch(url).then((r) => r.json())
+const queryFetcher = ({ queryKey: [data] }) => {
+  return axios({
+    method: 'POST',
+    url: '/api/query_fetcher',
+    data,
+    responseType: 'json',
+  }).then((res) => res.data)
+}
 
 export default function Home() {
   const blockPerSecBuffer = useRef([])
   const [previousData, setPreviousData] = useState(null)
   const [blockPerSec, setBlockPerSec] = useState(0)
-  const { data } = useQuery('/api/fetch_status', fetcher, {
+  const queryData = useRef([{ callOnlineFetcher: {} }]).current
+  const { data: _data } = useQuery(queryData, queryFetcher, {
     refetchInterval: 1000,
     keepPreviousData: true,
   })
+  const data = _data?.content.fetcherStateUpdate
 
   useEffect(() => {
     const _p = previousData

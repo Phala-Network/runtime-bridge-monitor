@@ -478,6 +478,13 @@ available-typed-arrays@^1.0.2:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.4.tgz#9e0ae84ecff20caae6a94a1c3bc39b955649b7a9"
   integrity sha512-SA5mXJWrId1TaQjfxUYghbqQ/hYioKmLJvPJyDuYRtXXenFNMjj4hSSt1Cf1xsuXSXrtxrVC5Ot4eU6cOtBDdA==
 
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+  dependencies:
+    follow-redirects "^1.10.0"
+
 babel-plugin-syntax-jsx@6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
@@ -1539,6 +1546,11 @@ focus-lock@^0.9.1:
   dependencies:
     tslib "^2.0.3"
 
+follow-redirects@^1.10.0:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
+  integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
+
 foreach@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/foreach/-/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
@@ -1975,10 +1987,10 @@ jest-worker@27.0.0-next.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jotai@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.2.1.tgz#74ec241023bf26a36ec0e87faa4e946bcd29422c"
-  integrity sha512-OdkFSLoAHTAe1KWndMRMKdr/fqNan4SKAg0UDp1j6Mo2RebAy3NEDGAUCWVX9dfmvSRMz+4mkzAxfi1Z4dy56w==
+jotai@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.2.2.tgz#631fd7ad44e9ac26cdf9874d52282c1cfe032807"
+  integrity sha512-iqkkUdWsH2Mk4HY1biba/8kA77+8liVBy8E0d8Nce29qow4h9mzdDhpTasAruuFYPycw6JvfZgL5RB0JJuIZjw==
 
 js-sha3@0.8.0:
   version "0.8.0"

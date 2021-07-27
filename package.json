@@ -6,15 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "proto:build": "pbjs -t static-module --no-beautify -p ./vendor/proto -o ./message/proto.generated.js -w es6 ./vendor/proto/message.proto && pbts -o ./message/proto.generated.d.ts ./message/proto.generated.js && sed -i \"s/import \\* as $protobuf/import $protobuf/g\" ./message/proto.generated.js"
+    "proto:build": "pbjs -t static-module --no-beautify -p ./vendor/proto -o ./message/proto.generated.js -w es6 ./vendor/proto/message.proto && pbts -o ./message/proto.generated.d.ts ./message/proto.generated.js && sed -i \"s/import \\* as $protobuf/import $protobuf/g\" ./message/proto.generated.js",
+    "proto:darwin:build": "pbjs -t static-module --no-beautify -p ./vendor/proto -o ./message/proto.generated.js -w es6 ./vendor/proto/message.proto && pbts -o ./message/proto.generated.d.ts ./message/proto.generated.js && gsed -i \"s/import \\* as $protobuf/import $protobuf/g\" ./message/proto.generated.js"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "baseui": "^9.115.2",
     "bunyan": "^1.8.15",
     "dayjs": "^1.10.6",
     "decimal.js": "^10.2.1",
     "ioredis": "^4.27.2",
-    "jotai": "^1.2.1",
+    "jotai": "^1.2.2",
     "next": "^10.2.2",
     "p-queue": "^7.1.0",
     "protobufjs": "^6.11.2",
