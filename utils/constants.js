@@ -21,7 +21,7 @@ export const ROCOCO_SS58_FORMAT = 42
 
 export const APP_MESSAGE_QUEUE_NAME = 'prbmq'
 export const APP_MESSAGE_TUNNEL_CHANNEL = Buffer.from('prb')
-export const APP_MESSAGE_TUNNEL_QUERY_TIMEOUT = 15000
+export const APP_MESSAGE_TUNNEL_QUERY_TIMEOUT = 5000
 
 export const FRNK = '0x46524e4b'
 export const BALANCE_10K_PHA_STRING = '10000000000000000'

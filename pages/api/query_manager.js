@@ -11,8 +11,7 @@ const queryManager = async (options) => {
   })
 }
 
-export default (req, res) => {
-  queryManager(req.body).then((result) => {
-    res.status(200).json(result)
-  })
+export default async (req, res) => {
+  const result = await queryManager(req.body)
+  res.status(200).json(result)
 }
