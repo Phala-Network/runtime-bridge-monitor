@@ -12,13 +12,7 @@ const queryManager = async (options) => {
 }
 
 export default (req, res) => {
-  queryManager(JSON.parse(req.body)).then((result) => {
+  queryManager(req.body).then((result) => {
     res.status(200).json(result)
   })
-}
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
 }
