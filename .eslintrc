@@ -1,0 +1,32 @@
+{
+  "env": { "browser": true, "es2021": true, "node": true },
+  "extends": [
+    "plugin:react/recommended",
+    "standard",
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaFeatures": { "jsx": true },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "sort-imports-es6-autofix"],
+  "rules": {
+    "no-unused-vars": "off",
+    "sort-imports-es6-autofix/sort-imports-es6": [
+      "error",
+      {
+        "ignoreCase": false,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "multiple", "single", "all"]
+      }
+    ],
+    "react/no-unescaped-entities": "off",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/display-name": "off"
+  },
+  "settings": { "react": { "version": "detect" } },
+  "globals": { "__server_import": "readonly" }
+}
