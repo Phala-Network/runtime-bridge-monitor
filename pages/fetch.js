@@ -1,10 +1,12 @@
 import { ALIGNMENT, Grid } from 'baseui/layout-grid'
+import { Card, StyledBody } from 'baseui/card'
 import { HeadingXLarge } from 'baseui/typography'
+import { SIZE, StyledSpinnerNext } from 'baseui/spinner'
 import { Table } from 'baseui/table-semantic'
 import { queryFetcher } from '../utils/query'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useStyletron } from 'baseui'
+import { useStyletron, withStyle } from 'baseui'
 import Head from 'next/head'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -12,6 +14,12 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 const columns = ['key', 'value']
+
+const LoadingIcon = withStyle(StyledSpinnerNext, {
+  display: 'inline-block',
+  verticalAlign: '-4px',
+  marginRight: '8px',
+})
 
 export default function Home() {
   const blockPerSecBuffer = useRef([])
@@ -58,7 +66,7 @@ export default function Home() {
       k,
       <code key={k}>{`${data[k]}`}</code>,
     ])
-    if (!data?.synched) {
+    if (data?.length && !data?.synched) {
       ret.push(['Speed(block/s)', <code key="blockPerSec">{blockPerSec}</code>])
       ret.push([
         'Blocks to reach target',
@@ -93,12 +101,23 @@ export default function Home() {
         <HeadingXLarge marginRight={'auto'}>Fetcher Status</HeadingXLarge>
       </Grid>
       <Grid
-        overrides={{ Grid: { style: { margin: '0 12px 42px' } } }}
+        overrides={{ Grid: { style: { marginBottom: '42px' } } }}
         align={ALIGNMENT.center}
       >
-        <div className={css({ width: '100%' })}>
-          <Table columns={columns} data={list} />
-        </div>
+        <Card overrides={{ Root: { style: { width: '100%' } } }}>
+          {list.length ? (
+            <div className={css({ width: '100%' })}>
+              <Table columns={columns} data={list} />
+            </div>
+          ) : (
+            <StyledBody>
+              <p>
+                <LoadingIcon $size={SIZE.small} />
+                Waiting for data...
+              </p>
+            </StyledBody>
+          )}
+        </Card>
       </Grid>
     </div>
   )
