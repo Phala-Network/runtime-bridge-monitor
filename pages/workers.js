@@ -1,6 +1,10 @@
+import { CALL_ONLINE_LIFECYCLE_MANAGER, queryManager } from '../utils/query'
+import { useQuery } from 'react-query'
 import Head from 'next/head'
 
 const WorkersPage = () => {
+  const { data } = useQuery([CALL_ONLINE_LIFECYCLE_MANAGER], queryManager)
+  console.log(data)
   return (
     <div>
       <Head>
