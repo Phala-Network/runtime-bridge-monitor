@@ -95,7 +95,9 @@ export default function Home() {
         <title>Fetcher Status</title>
       </Head>
       <Grid
-        overrides={{ Grid: { style: { margin: '0 12px' } } }}
+        overrides={{
+          Grid: { style: { marginLeft: '12px', marginRight: '12px' } },
+        }}
         align={ALIGNMENT.center}
       >
         <HeadingXLarge marginRight={'auto'}>Fetcher Status</HeadingXLarge>

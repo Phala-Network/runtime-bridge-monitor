@@ -9,7 +9,7 @@ const poolsArr = atom([])
 
 export const updateAllLists = atom(null, (get, set, { workers, pools }) => {
   set(workersArr, workers)
-  set(poolsArr, workers)
+  set(poolsArr, pools)
 })
 
 export const useUpdatedLists = () => {
