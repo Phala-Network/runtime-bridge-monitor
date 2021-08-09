@@ -1,12 +1,16 @@
+import { useEffect } from 'react'
 import Head from 'next/head'
+import router from 'next/router'
 
 const IndexPage = () => {
+  useEffect(() => {
+    router.push('/fetch')
+  }, [])
   return (
     <div>
       <Head>
-        <title>Welcome</title>
+        <title>Loading...</title>
       </Head>
-      <h1>Index Page</h1>
     </div>
   )
 }

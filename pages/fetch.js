@@ -1,29 +1,43 @@
-import { ListItem, ListItemLabel } from 'baseui/list'
+import { ALIGNMENT, Grid } from 'baseui/layout-grid'
+import { Card, StyledBody } from 'baseui/card'
+import { HeadingXLarge } from 'baseui/typography'
+import { SIZE, StyledSpinnerNext } from 'baseui/spinner'
+import { Table } from 'baseui/table-semantic'
+import { queryFetcher } from '../utils/query'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
+import { useStyletron, withStyle } from 'baseui'
 import Head from 'next/head'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 dayjs.extend(relativeTime)
 
-const fetcher = ({ queryKey: [url] }) => fetch(url).then((r) => r.json())
+const columns = ['key', 'value']
+
+const LoadingIcon = withStyle(StyledSpinnerNext, {
+  display: 'inline-block',
+  verticalAlign: '-4px',
+  marginRight: '8px',
+})
 
 export default function Home() {
   const blockPerSecBuffer = useRef([])
   const [previousData, setPreviousData] = useState(null)
   const [blockPerSec, setBlockPerSec] = useState(0)
-  const { data } = useQuery('/api/fetch_status', fetcher, {
+  const queryData = useRef([{ callOnlineFetcher: {} }]).current
+  const { data: _data } = useQuery(queryData, queryFetcher, {
     refetchInterval: 1000,
     keepPreviousData: true,
   })
+  const data = _data?.fetcherStateUpdate
 
   useEffect(() => {
     const _p = previousData
 
     if (previousData !== data) {
       setPreviousData(data)
-      const s = data?.blobHeight - _p?.blobHeight || 0
+      const s = data?.paraBlobHeight - _p?.paraBlobHeight || 0
       if (s <= 0) {
         return
       }
@@ -35,11 +49,6 @@ export default function Home() {
     }
   }, [data])
 
-  const list = useMemo(
-    () => Object.keys(data || {}).map((k) => [k, data[k]]),
-    [data]
-  )
-
   const estimatedTime = useMemo(() => {
     if (blockPerSec <= 0) {
       return 'N/A'
@@ -47,45 +56,71 @@ export default function Home() {
     const s =
       blockPerSecBuffer.current.reduce((sum, i) => sum + i) /
       blockPerSecBuffer.current.length
-    const rest = data?.knownHeight - data?.blobHeight || 0
+    const rest = data?.paraKnownHeight - data?.paraBlobHeight || 0
     const sec = parseInt(rest / s) || 0
     return dayjs().add(sec, 'second').fromNow(dayjs())
-  }, [blockPerSec, data?.blobHeight, data?.knownHeight])
+  }, [blockPerSec, data?.paraBlobHeight, data?.paraKnownHeight])
+
+  const list = useMemo(() => {
+    const ret = Object.keys(data || {}).map((k, i) => [
+      k,
+      <code key={k}>{`${data[k]}`}</code>,
+    ])
+    if (ret.length && !data?.synched) {
+      ret.push(['Speed(block/s)', <code key="blockPerSec">{blockPerSec}</code>])
+      ret.push([
+        'Blocks to reach target',
+        <code key="delta">{data?.paraKnownHeight - data?.paraBlobHeight}</code>,
+      ])
+      ret.push([
+        'Estimated finish time',
+        <code key="estimatedTime">{estimatedTime}</code>,
+      ])
+    }
+    return ret
+  }, [
+    data,
+    blockPerSec,
+    data?.paraKnownHeight,
+    data?.paraBlobHeight,
+    estimatedTime,
+    data?.synched,
+  ])
+
+  const [css] = useStyletron()
 
   return (
     <div>
       <Head>
         <title>Fetcher Status</title>
       </Head>
-      <h1>Fetcher Status</h1>
-      {list.map((i) => (
-        <ListItem key={i[0]}>
-          <ListItemLabel description={<code>{`${i[1]}`}</code>}>
-            {i[0]}
-          </ListItemLabel>
-        </ListItem>
-      ))}
-      {!data?.hasReachedInitTarget ? (
-        <>
-          <ListItem>
-            <ListItemLabel description={<code>{blockPerSec}</code>}>
-              Speed(block/s)
-            </ListItemLabel>
-          </ListItem>
-          <ListItem>
-            <ListItemLabel
-              description={<code>{data?.knownHeight - data?.blobHeight}</code>}
-            >
-              Blocks to reach target
-            </ListItemLabel>
-          </ListItem>
-          <ListItem>
-            <ListItemLabel description={<code>{estimatedTime}</code>}>
-              Estimated finish time
-            </ListItemLabel>
-          </ListItem>
-        </>
-      ) : null}
+      <Grid
+        overrides={{
+          Grid: { style: { marginLeft: '12px', marginRight: '12px' } },
+        }}
+        align={ALIGNMENT.center}
+      >
+        <HeadingXLarge marginRight={'auto'}>Fetcher Status</HeadingXLarge>
+      </Grid>
+      <Grid
+        overrides={{ Grid: { style: { marginBottom: '42px' } } }}
+        align={ALIGNMENT.center}
+      >
+        <Card overrides={{ Root: { style: { width: '100%' } } }}>
+          {list.length ? (
+            <div className={css({ width: '100%' })}>
+              <Table columns={columns} data={list} />
+            </div>
+          ) : (
+            <StyledBody>
+              <p>
+                <LoadingIcon $size={SIZE.small} />
+                Waiting for data...
+              </p>
+            </StyledBody>
+          )}
+        </Card>
+      </Grid>
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 const ROUTES = [
   { route: '/fetch', name: 'Fetcher' },
   { route: '/workers', name: 'Workers' },
+  { route: '/pools', name: 'Pools' },
 ]
 
 const TabsOverrides = {

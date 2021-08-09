@@ -1,15 +1,7 @@
-import path from 'path'
-import protobuf from 'protobufjs'
+import pbRoot, { google, prb } from './proto.generated'
 
-const protoPath = path.join(process.cwd(), './vendor/proto/message.proto')
-const protoRoot = protobuf.loadSync(protoPath)
+export const Message = prb.Message
+export const MessageType = prb.MessageType
+export const MessageTarget = prb.MessageTarget
 
-if (process.env.NODE_ENV === 'development') {
-  globalThis.protoRoot = protoRoot
-}
-
-export const Message = protoRoot.lookup('prb.Message')
-export const MessageType = protoRoot.lookup('prb.MessageType')
-export const MessageTarget = protoRoot.lookup('prb.MessageTarget')
-
-export { protoRoot }
+export { prb, google, pbRoot, pbRoot as protoRoot }
