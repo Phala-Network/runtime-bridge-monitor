@@ -3,6 +3,7 @@ import { AdaptedCheckbox } from 'baseui-final-form/checkbox'
 import { AdaptedInput } from 'baseui-final-form/input'
 import {
   BooleanColumn,
+  CustomColumn,
   NUMERICAL_FORMATS,
   NumericalColumn,
   StatefulDataTable,
@@ -26,6 +27,7 @@ import { queryManager } from '../utils/query'
 import {
   updateAllLists,
   useUpdatedLists,
+  useWorkerListWithStates,
   workers as workersAtom,
 } from '../atoms/mgmt'
 import { useAtom } from 'jotai'
@@ -250,6 +252,49 @@ const CreateWorkerModalWithButton = () => {
 }
 
 const listColumn = [
+  StringColumn({
+    title: 'UUID',
+    mapDataToValue: (data) => data.uuid,
+  }),
+  StringColumn({
+    title: 'Name',
+    mapDataToValue: (data) => data.name,
+  }),
+  StringColumn({
+    title: 'Status',
+    mapDataToValue: (data) => data.status,
+  }),
+  NumericalColumn({
+    title: 'parentHeaderSynchedTo',
+    format: NUMERICAL_FORMATS.DEFAULT,
+    mapDataToValue: (data) => parseInt(data.parentHeaderSynchedTo || 0),
+  }),
+  NumericalColumn({
+    title: 'paraHeaderSynchedTo',
+    format: NUMERICAL_FORMATS.DEFAULT,
+    mapDataToValue: (data) => parseInt(data.paraHeaderSynchedTo || 0),
+  }),
+  NumericalColumn({
+    title: 'paraBlockDispatchedTo',
+    format: NUMERICAL_FORMATS.DEFAULT,
+    mapDataToValue: (data) => parseInt(data.paraBlockDispatchedTo || 0),
+  }),
+  StringColumn({
+    title: 'Last Error Message',
+    mapDataToValue: (data) => data.lastErrorMessage || '',
+  }),
+  BooleanColumn({
+    title: 'Initialized',
+    mapDataToValue: (data) => !!data.initialized,
+  }),
+  StringColumn({
+    title: 'Endpoint',
+    mapDataToValue: (data) => data.endpoint,
+  }),
+  StringColumn({
+    title: 'Public Key',
+    mapDataToValue: (data) => data.publicKey || '',
+  }),
   NumericalColumn({
     title: 'PID',
     format: NUMERICAL_FORMATS.DEFAULT,
@@ -259,27 +304,17 @@ const listColumn = [
     title: 'Enabled',
     mapDataToValue: (data) => !!data.enabled,
   }),
-  StringColumn({
-    title: 'Name',
-    mapDataToValue: (data) => data.name,
-  }),
-  StringColumn({
-    title: 'Endpoint',
-    mapDataToValue: (data) => data.endpoint,
-  }),
-  StringColumn({
-    title: 'UUID',
-    mapDataToValue: (data) => data.uuid,
-  }),
 ]
 
 const WorkersList = ({ workers }) => {
   const [currentRow, setCurrentRow] = useState(null)
   const [css] = useStyletron()
   const updateLists = useUpdateAtom(updateAllLists)
+  const rows = useWorkerListWithStates(workers)
+
   const deleteRow = useCallback(
     async ({ row }) => {
-      if (!window.confirm(`Delete pool #${row.data.pid}?`)) {
+      if (!window.confirm(`Delete worker #${row.data.uuid}?`)) {
         return
       }
       const { lifecycleManagerStateUpdate } = await queryManager({
@@ -322,10 +357,7 @@ const WorkersList = ({ workers }) => {
     ],
     [deleteRow, setCurrentRow]
   )
-  const rows = useMemo(
-    () => workers.map((i) => ({ id: i.pid, data: i })),
-    [workers]
-  )
+
   return (
     <>
       <div className={css({ height: 'calc(100vh - 270px)' })}>
