@@ -65,24 +65,28 @@ const PoolModalForm = ({ initValues, onSubmit, setModalClose }) => {
                 label="PID"
                 type="number"
                 disabled={form.submitting}
+                autoComplete="off"
               />
               <Field
                 name="name"
                 component={AdaptedInput}
                 label="Name"
                 disabled={form.submitting}
+                autoComplete="off"
               />
               <Field
                 name="mnemonic"
                 component={AdaptedInput}
                 label="Owner Mnemonic"
                 disabled={form.submitting}
+                autoComplete="off"
               />
               <Field
                 name="polkadotJson"
                 component={AdaptedInput}
                 label="Owner Polkadot JSON"
                 disabled={form.submitting}
+                autoComplete="off"
               />
               <Field
                 name="enabled"

@@ -66,12 +66,14 @@ const WorkerModalForm = ({ initValues, onSubmit, setModalClose }) => {
                 label="Pool PID"
                 type="number"
                 disabled={form.submitting}
+                autoComplete="off"
               />
               <Field
                 name="name"
                 component={AdaptedInput}
                 label="Name"
                 disabled={form.submitting}
+                autoComplete="off"
               />
               <Field
                 name="endpoint"
@@ -79,6 +81,7 @@ const WorkerModalForm = ({ initValues, onSubmit, setModalClose }) => {
                 label="pRuntime HTTP Endpoint"
                 placeholder="http://path.to.endpoint"
                 disabled={form.submitting}
+                autoComplete="off"
               />
               <Field
                 name="enabled"
