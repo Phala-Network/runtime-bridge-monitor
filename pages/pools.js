@@ -1,6 +1,13 @@
 import { ALIGNMENT, Grid } from 'baseui/layout-grid'
 import { AdaptedCheckbox } from 'baseui-final-form/checkbox'
 import { AdaptedInput } from 'baseui-final-form/input'
+import {
+  BooleanColumn,
+  NUMERICAL_FORMATS,
+  NumericalColumn,
+  StatefulDataTable,
+  StringColumn,
+} from 'baseui/data-table'
 import { Button, KIND, SHAPE, SIZE } from 'baseui/button'
 import { Card, StyledBody } from 'baseui/card'
 import { Delete, Overflow, Plus } from 'baseui/icon'
@@ -15,13 +22,6 @@ import {
   ModalHeader,
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
-import {
-  BooleanColumn,
-  NUMERICAL_FORMATS,
-  NumericalColumn,
-  StatefulDataTable,
-  StringColumn
-} from "baseui/data-table";
 import {
   pools as poolsAtom,
   updateAllLists,

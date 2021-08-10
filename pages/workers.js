@@ -256,16 +256,34 @@ const CreateWorkerModalWithButton = () => {
 
 const listColumn = [
   StringColumn({
-    title: 'UUID',
-    mapDataToValue: (data) => data.uuid,
-  }),
-  StringColumn({
     title: 'Name',
     mapDataToValue: (data) => data.name,
+  }),
+  NumericalColumn({
+    title: 'PID',
+    format: NUMERICAL_FORMATS.DEFAULT,
+    mapDataToValue: (data) => parseInt(data.pid),
   }),
   StringColumn({
     title: 'Status',
     mapDataToValue: (data) => data.status,
+  }),
+  StringColumn({
+    title: 'Last Message',
+    mapDataToValue: (data) => data.lastErrorMessage || '',
+  }),
+  NumericalColumn({
+    title: 'Block Height',
+    format: NUMERICAL_FORMATS.DEFAULT,
+    mapDataToValue: (data) => parseInt(data.paraBlockDispatchedTo || 0),
+  }),
+  StringColumn({
+    title: 'Public Key',
+    mapDataToValue: (data) => '0x' + (data.publicKey || ''),
+  }),
+  StringColumn({
+    title: 'UUID',
+    mapDataToValue: (data) => data.uuid,
   }),
   NumericalColumn({
     title: 'parentHeaderSynchedTo',
@@ -277,15 +295,6 @@ const listColumn = [
     format: NUMERICAL_FORMATS.DEFAULT,
     mapDataToValue: (data) => parseInt(data.paraHeaderSynchedTo || 0),
   }),
-  NumericalColumn({
-    title: 'paraBlockDispatchedTo',
-    format: NUMERICAL_FORMATS.DEFAULT,
-    mapDataToValue: (data) => parseInt(data.paraBlockDispatchedTo || 0),
-  }),
-  StringColumn({
-    title: 'Last Error Message',
-    mapDataToValue: (data) => data.lastErrorMessage || '',
-  }),
   BooleanColumn({
     title: 'Initialized',
     mapDataToValue: (data) => !!data.initialized,
@@ -293,15 +302,6 @@ const listColumn = [
   StringColumn({
     title: 'Endpoint',
     mapDataToValue: (data) => data.endpoint,
-  }),
-  StringColumn({
-    title: 'Public Key',
-    mapDataToValue: (data) => data.publicKey || '',
-  }),
-  NumericalColumn({
-    title: 'PID',
-    format: NUMERICAL_FORMATS.DEFAULT,
-    mapDataToValue: (data) => parseInt(data.pid),
   }),
   BooleanColumn({
     title: 'Enabled',
