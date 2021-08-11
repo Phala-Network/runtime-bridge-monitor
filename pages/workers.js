@@ -3,7 +3,6 @@ import { AdaptedCheckbox } from 'baseui-final-form/checkbox'
 import { AdaptedInput } from 'baseui-final-form/input'
 import {
   BooleanColumn,
-  CustomColumn,
   NUMERICAL_FORMATS,
   NumericalColumn,
   StatefulDataTable,
@@ -34,13 +33,19 @@ import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
 import { useStyletron } from 'baseui'
 import { useUpdateAtom } from 'jotai/utils'
+import BN from 'bn.js'
 import Head from 'next/head'
+
+const BN_1PHA = new BN('1000000000000')
 
 const WorkerModalForm = ({ initValues, onSubmit, setModalClose }) => {
   const validate = useCallback((values) => {
     const ret = {}
     if (!(parseInt(values.pid) >= 1)) {
       ret.pid = 'PID should be >= 1.'
+    }
+    if (BN_1PHA.gte(new BN(values.stake))) {
+      ret.stake = 'Stake amount be > 1000000000000(1PHA)'
     }
     if (!(values.name || '').trim()) {
       ret.name = 'Required.'
@@ -72,6 +77,14 @@ const WorkerModalForm = ({ initValues, onSubmit, setModalClose }) => {
                 name="name"
                 component={AdaptedInput}
                 label="Name"
+                disabled={form.submitting}
+                autoComplete="off"
+              />
+              <Field
+                name="stake"
+                component={AdaptedInput}
+                label="Stake Amount(BN string)"
+                type="number"
                 disabled={form.submitting}
                 autoComplete="off"
               />
@@ -280,6 +293,10 @@ const listColumn = [
   StringColumn({
     title: 'Public Key',
     mapDataToValue: (data) => '0x' + (data.publicKey || ''),
+  }),
+  StringColumn({
+    title: 'Stake Amount(BN)',
+    mapDataToValue: (data) => data.stake || 0,
   }),
   StringColumn({
     title: 'UUID',
