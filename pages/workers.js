@@ -283,7 +283,7 @@ const listColumn = [
   }),
   StringColumn({
     title: 'Last Message',
-    mapDataToValue: (data) => data.lastErrorMessage || '',
+    mapDataToValue: (data) => data.lastMessage || '',
   }),
   NumericalColumn({
     title: 'Block Height',
@@ -293,6 +293,14 @@ const listColumn = [
   StringColumn({
     title: 'Public Key',
     mapDataToValue: (data) => '0x' + (data.publicKey || ''),
+  }),
+  StringColumn({
+    title: 'Miner Status',
+    mapDataToValue: (data) => data.minerInfoJson || '',
+  }),
+  StringColumn({
+    title: 'Miner Account',
+    mapDataToValue: (data) => data.minerAccountId || '',
   }),
   StringColumn({
     title: 'Stake Amount(BN)',

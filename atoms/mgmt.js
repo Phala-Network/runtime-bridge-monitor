@@ -51,18 +51,6 @@ const updateWorkerState = atom(null, async (get, set, worker) => {
     ],
   })
 
-  try {
-    // TODO
-    // const publicKey = '0x' + workerState.publicKey
-    // workerState.accountId = (
-    //   await phalaApi.query.phalaMining.workerBindings(publicKey)
-    // )
-    //   .unwrapOrDefault()
-    //   .toString()
-  } catch (e) {
-    console.warn(e)
-  }
-
   const states = get(workerStatesAtom)
   set(
     workerStatesAtom,
