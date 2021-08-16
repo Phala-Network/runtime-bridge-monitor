@@ -271,6 +271,7 @@ const listColumn = [
   StringColumn({
     title: 'Name',
     mapDataToValue: (data) => data.name,
+    lineClamp: 3,
   }),
   NumericalColumn({
     title: 'PID',
@@ -280,10 +281,12 @@ const listColumn = [
   StringColumn({
     title: 'Status',
     mapDataToValue: (data) => data.status,
+    lineClamp: 3,
   }),
   StringColumn({
     title: 'Last Message',
     mapDataToValue: (data) => data.lastMessage || '',
+    lineClamp: 3,
   }),
   NumericalColumn({
     title: 'Block Height',
@@ -293,22 +296,27 @@ const listColumn = [
   StringColumn({
     title: 'Public Key',
     mapDataToValue: (data) => '0x' + (data.publicKey || ''),
+    lineClamp: 3,
   }),
   StringColumn({
     title: 'Miner Status',
     mapDataToValue: (data) => data.minerInfoJson || '',
+    lineClamp: 3,
   }),
   StringColumn({
     title: 'Miner Account',
     mapDataToValue: (data) => data.minerAccountId || '',
+    lineClamp: 3,
   }),
   StringColumn({
     title: 'Stake Amount(BN)',
     mapDataToValue: (data) => data.stake || 0,
+    lineClamp: 3,
   }),
   StringColumn({
     title: 'UUID',
     mapDataToValue: (data) => data.uuid,
+    lineClamp: 3,
   }),
   NumericalColumn({
     title: 'parentHeaderSynchedTo',
@@ -327,6 +335,7 @@ const listColumn = [
   StringColumn({
     title: 'Endpoint',
     mapDataToValue: (data) => data.endpoint,
+    lineClamp: 3,
   }),
   BooleanColumn({
     title: 'Enabled',
@@ -394,6 +403,7 @@ const WorkersList = ({ workers }) => {
           rows={rows}
           rowActions={rowActions}
           resizableColumnWidths
+          rowHeight={78}
         />
       </div>
       <WorkerRowEditModal
