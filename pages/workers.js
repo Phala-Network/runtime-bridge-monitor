@@ -22,7 +22,9 @@ import {
   ModalHeader,
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
+import { HeaderWrapper } from "../components/PageWrapper";
 import { queryManager } from '../utils/query'
+import { styled, useStyletron } from 'baseui'
 import {
   updateAllLists,
   useUpdatedLists,
@@ -31,7 +33,6 @@ import {
 } from '../atoms/mgmt'
 import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
-import { useStyletron } from 'baseui'
 import { useUpdateAtom } from 'jotai/utils'
 import BN from 'bn.js'
 import Head from 'next/head'
@@ -246,6 +247,13 @@ const CreateWorkerModalWithButton = () => {
         onClick={() => setModalOpen(true)}
         shape={SHAPE.pill}
         size={SIZE.compact}
+        overrides={{
+          Root: {
+            style: {
+              height: '36px',
+            },
+          },
+        }}
       >
         <Plus />
         Add
@@ -414,6 +422,7 @@ const WorkersList = ({ workers }) => {
   )
 }
 
+
 const WorkersPage = () => {
   const [workers] = useAtom(workersAtom)
   useUpdatedLists()
@@ -422,16 +431,11 @@ const WorkersPage = () => {
       <Head>
         <title>Workers</title>
       </Head>
-      <Grid
-        overrides={{
-          Grid: { style: { marginLeft: '12px', marginRight: '12px' } },
-        }}
-        align={ALIGNMENT.center}
-      >
+      <HeaderWrapper>
         <HeadingXLarge marginRight={'auto'}>Workers</HeadingXLarge>
         <CreateWorkerModalWithButton />
-      </Grid>
-      <Grid overrides={{ Grid: { style: { marginBottom: '42px' } } }}>
+      </HeaderWrapper>
+      <div style={{ margin: '0 42px' }}>
         <Card overrides={{ Root: { style: { width: '100%' } } }}>
           {workers.length ? (
             <WorkersList workers={workers} />
@@ -439,7 +443,7 @@ const WorkersPage = () => {
             <StyledBody>🈳️ Nothing found here.</StyledBody>
           )}
         </Card>
-      </Grid>
+      </div>
     </div>
   )
 }

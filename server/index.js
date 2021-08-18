@@ -13,6 +13,7 @@ const setServer = async () => {
       },
     })
 
+  logger.info(`REDIS_ENDPOINT = ${REDIS_ENDPOINT}`)
   const tunnelConnection = await createMessageTunnel({
     redisEndpoint: REDIS_ENDPOINT,
     from: MessageTarget.MTG_APP,

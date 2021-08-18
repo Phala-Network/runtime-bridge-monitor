@@ -1,5 +1,6 @@
 import { ALIGNMENT, Grid } from 'baseui/layout-grid'
 import { Card, StyledBody } from 'baseui/card'
+import { HeaderWrapper } from '../components/PageWrapper'
 import { HeadingXLarge } from 'baseui/typography'
 import { SIZE, StyledSpinnerNext } from 'baseui/spinner'
 import { Table } from 'baseui/table-semantic'
@@ -94,18 +95,10 @@ export default function Home() {
       <Head>
         <title>Fetcher Status</title>
       </Head>
-      <Grid
-        overrides={{
-          Grid: { style: { marginLeft: '12px', marginRight: '12px' } },
-        }}
-        align={ALIGNMENT.center}
-      >
+      <HeaderWrapper>
         <HeadingXLarge marginRight={'auto'}>Fetcher Status</HeadingXLarge>
-      </Grid>
-      <Grid
-        overrides={{ Grid: { style: { marginBottom: '42px' } } }}
-        align={ALIGNMENT.center}
-      >
+      </HeaderWrapper>
+      <div style={{ margin: '0 42px' }}>
         <Card overrides={{ Root: { style: { width: '100%' } } }}>
           {list.length ? (
             <div className={css({ width: '100%' })}>
@@ -120,7 +113,7 @@ export default function Home() {
             </StyledBody>
           )}
         </Card>
-      </Grid>
+      </div>
     </div>
   )
 }

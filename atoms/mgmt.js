@@ -52,12 +52,14 @@ const updateWorkerState = atom(null, async (get, set, worker) => {
   })
 
   const states = get(workerStatesAtom)
-  set(
-    workerStatesAtom,
-    produce(states, (draft) => {
-      draft[workerState.worker.uuid] = workerState
-    })
-  )
+  if (workerState?.worker?.uuid) {
+    set(
+      workerStatesAtom,
+      produce(states, (draft) => {
+        draft[workerState.worker.uuid] = workerState
+      })
+    )
+  }
 })
 
 export const useWorkerListWithStates = (workers) => {
@@ -66,8 +68,10 @@ export const useWorkerListWithStates = (workers) => {
   useEffect(() => {
     const unsub = []
     for (const w of workers) {
-      setWorkerState(w)
-      unsub.push(setInterval(() => setWorkerState(w), 3000))
+      if (w.enabled && !w.deleted) {
+        setWorkerState(w)
+        unsub.push(setInterval(() => setWorkerState(w), 3000))
+      }
     }
     return () => unsub.map((i) => clearInterval(i))
   }, [workers])

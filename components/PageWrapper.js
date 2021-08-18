@@ -1,5 +1,6 @@
 import { Cell, Grid } from 'baseui/layout-grid'
 import { StyledTabList, Tab, Tabs } from 'baseui/tabs-motion'
+import { styled } from 'baseui'
 import { useRouter } from 'next/router'
 
 const ROUTES = [
@@ -43,10 +44,15 @@ const PageWrapper = ({ children }) => {
   return (
     <>
       <AppNavbar />
-      <Grid>
-        <Cell span={12}>{children}</Cell>
-      </Grid>
+      {children}
     </>
   )
 }
+
+export const HeaderWrapper = styled('div', {
+  display: 'flex',
+  margin: '0 56px',
+  alignItems: 'center',
+})
+
 export default PageWrapper

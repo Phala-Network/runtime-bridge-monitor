@@ -13,6 +13,7 @@ import { Card, StyledBody } from 'baseui/card'
 import { Delete, Overflow, Plus } from 'baseui/icon'
 import { FORM_ERROR } from 'final-form'
 import { Field, Form } from 'react-final-form'
+import { HeaderWrapper } from '../components/PageWrapper'
 import { HeadingXLarge } from 'baseui/typography'
 import {
   Modal,
@@ -401,17 +402,11 @@ const PoolsPage = () => {
       <Head>
         <title>Pools</title>
       </Head>
-      <Grid
-        overrides={{
-          Grid: { style: { marginLeft: '12px', marginRight: '12px' } },
-        }}
-        align={ALIGNMENT.center}
-      >
+      <HeaderWrapper>
         <HeadingXLarge marginRight={'auto'}>Pools</HeadingXLarge>
         <CreatePoolModalWithButton />
-      </Grid>
-
-      <Grid overrides={{ Grid: { style: { marginBottom: '42px' } } }}>
+      </HeaderWrapper>
+      <div style={{ margin: '0 42px' }}>
         <Card overrides={{ Root: { style: { width: '100%' } } }}>
           {pools.length ? (
             <PoolsList pools={pools} />
@@ -419,7 +414,7 @@ const PoolsPage = () => {
             <StyledBody>🈳️ Nothing found here.</StyledBody>
           )}
         </Card>
-      </Grid>
+      </div>
     </div>
   )
 }
