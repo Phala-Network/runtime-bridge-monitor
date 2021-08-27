@@ -1,4 +1,3 @@
-import { ALIGNMENT, Grid } from 'baseui/layout-grid'
 import { AdaptedCheckbox } from 'baseui-final-form/checkbox'
 import { AdaptedInput } from 'baseui-final-form/input'
 import {
@@ -13,6 +12,7 @@ import { Card, StyledBody } from 'baseui/card'
 import { Delete, Overflow, Plus } from 'baseui/icon'
 import { FORM_ERROR } from 'final-form'
 import { Field, Form } from 'react-final-form'
+import { HeaderWrapper } from '../components/PageWrapper'
 import { HeadingXLarge } from 'baseui/typography'
 import {
   Modal,
@@ -22,9 +22,7 @@ import {
   ModalHeader,
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
-import { HeaderWrapper } from "../components/PageWrapper";
 import { queryManager } from '../utils/query'
-import { styled, useStyletron } from 'baseui'
 import {
   updateAllLists,
   useUpdatedLists,
@@ -33,6 +31,7 @@ import {
 } from '../atoms/mgmt'
 import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
+import { useStyletron } from 'baseui'
 import { useUpdateAtom } from 'jotai/utils'
 import BN from 'bn.js'
 import Head from 'next/head'
@@ -278,17 +277,17 @@ const CreateWorkerModalWithButton = () => {
 const listColumn = [
   StringColumn({
     title: 'Name',
-    mapDataToValue: (data) => data.name,
+    mapDataToValue: (data) => data.name || '',
     lineClamp: 3,
   }),
   NumericalColumn({
     title: 'PID',
     format: NUMERICAL_FORMATS.DEFAULT,
-    mapDataToValue: (data) => parseInt(data.pid),
+    mapDataToValue: (data) => parseInt(data.pid) || 0,
   }),
   StringColumn({
     title: 'Status',
-    mapDataToValue: (data) => data.status,
+    mapDataToValue: (data) => data.status || '',
     lineClamp: 3,
   }),
   StringColumn({
@@ -323,7 +322,7 @@ const listColumn = [
   }),
   StringColumn({
     title: 'UUID',
-    mapDataToValue: (data) => data.uuid,
+    mapDataToValue: (data) => data.uuid || '',
     lineClamp: 3,
   }),
   NumericalColumn({
@@ -342,7 +341,7 @@ const listColumn = [
   }),
   StringColumn({
     title: 'Endpoint',
-    mapDataToValue: (data) => data.endpoint,
+    mapDataToValue: (data) => data.endpoint || '',
     lineClamp: 3,
   }),
   BooleanColumn({
@@ -421,7 +420,6 @@ const WorkersList = ({ workers }) => {
     </>
   )
 }
-
 
 const WorkersPage = () => {
   const [workers] = useAtom(workersAtom)

@@ -36,30 +36,31 @@ const workerListWithState = atom((get) => {
   }))
 }, null)
 
-const updateWorkerState = atom(null, async (get, set, worker) => {
+const updateWorkerState = atom(null, async (get, set, workers) => {
   const {
-    workerStateUpdate: {
-      workerStates: [workerState],
-    },
+    workerStateUpdate: { workerStates },
   } = await queryManager({
     queryKey: [
       {
         queryWorkerState: {
-          ids: [{ uuid: worker.uuid }],
+          ids: workers.map((i) => ({ uuid: i.uuid })),
         },
       },
     ],
   })
 
   const states = get(workerStatesAtom)
-  if (workerState?.worker?.uuid) {
-    set(
-      workerStatesAtom,
-      produce(states, (draft) => {
-        draft[workerState.worker.uuid] = workerState
-      })
-    )
-  }
+
+  set(
+    workerStatesAtom,
+    produce(states, (draft) => {
+      for (const workerState of workerStates) {
+        if (workerState?.worker?.uuid) {
+          draft[workerState.worker.uuid] = workerState
+        }
+      }
+    })
+  )
 })
 
 export const useWorkerListWithStates = (workers) => {
@@ -67,12 +68,9 @@ export const useWorkerListWithStates = (workers) => {
   const setWorkerState = useUpdateAtom(updateWorkerState)
   useEffect(() => {
     const unsub = []
-    for (const w of workers) {
-      if (w.enabled && !w.deleted) {
-        setWorkerState(w)
-        unsub.push(setInterval(() => setWorkerState(w), 3000))
-      }
-    }
+    const _workers = workers.filter((w) => w.enabled && !w.deleted)
+    setWorkerState(_workers)
+    unsub.push(setInterval(() => setWorkerState(_workers), 3000))
     return () => unsub.map((i) => clearInterval(i))
   }, [workers])
   return workerState
