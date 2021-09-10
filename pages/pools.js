@@ -90,6 +90,13 @@ const PoolModalForm = ({ initValues, onSubmit, setModalClose }) => {
                 autoComplete="off"
               />
               <Field
+                name="realPhalaSs58"
+                component={AdaptedInput}
+                label="Proxy Real Account"
+                disabled={form.submitting}
+                autoComplete="off"
+              />
+              <Field
                 name="enabled"
                 label="Enabled"
                 component={AdaptedCheckbox}
@@ -157,6 +164,7 @@ const PoolRowEditModal = ({ currentRow, clearCurrentRow }) => {
             name: currentRow.data.name,
             polkadotJson: currentRow.data.owner.polkadotJson,
             enabled: currentRow.data.enabled,
+            realPhalaSs58: currentRow.data.realPhalaSs58,
           }
         : {},
     [currentRow]
@@ -179,6 +187,7 @@ const PoolRowEditModal = ({ currentRow, clearCurrentRow }) => {
                         mnemonic: values.mnemonic,
                         polkadotJson: values.polkadotJson,
                       },
+                      realPhalaSs58: values.realPhalaSs58,
                     },
                   },
                 ],
@@ -242,6 +251,7 @@ const CreatePoolModalWithButton = () => {
                       mnemonic: values.mnemonic,
                       polkadotJson: values.polkadotJson,
                     },
+                    realPhalaSs58: values.realPhalaSs58,
                   },
                 ],
               },
@@ -316,6 +326,10 @@ const listColumn = [
   StringColumn({
     title: 'Owner Account(Polkadot)',
     mapDataToValue: (data) => data.owner.ss58Polkadot,
+  }),
+  StringColumn({
+    title: 'Proxy Real Account',
+    mapDataToValue: (data) => data.realPhalaSs58 || 'None',
   }),
   StringColumn({
     title: 'UUID',
