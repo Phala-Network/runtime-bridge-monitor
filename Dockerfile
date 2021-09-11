@@ -24,9 +24,6 @@ RUN yarn install
 COPY . .
 
 RUN yarn proto:build
-
-COPY env.config.example.js ./env.config.js
-
 RUN yarn build
 
 ENTRYPOINT [ "yarn", "start" ]
