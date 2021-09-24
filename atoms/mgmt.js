@@ -57,6 +57,9 @@ const updateWorkerState = atom(null, async (get, set, workers) => {
       for (const workerState of workerStates) {
         if (workerState?.worker?.uuid) {
           draft[workerState.worker.uuid] = workerState
+          draft[workerState.worker.uuid].minerInfo = JSON.parse(
+            workerState?.minerInfoJson || '{}'
+          )
         }
       }
     })

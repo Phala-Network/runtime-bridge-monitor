@@ -1,7 +1,10 @@
 import { AdaptedCheckbox } from 'baseui-final-form/checkbox'
 import { AdaptedInput } from 'baseui-final-form/input'
+import { Block } from 'baseui/block'
 import {
   BooleanColumn,
+  CategoricalColumn,
+  CustomColumn,
   NUMERICAL_FORMATS,
   NumericalColumn,
   StatefulDataTable,
@@ -22,6 +25,7 @@ import {
   ModalHeader,
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
+import { PLACEMENT, StatefulTooltip, TRIGGER_TYPE } from 'baseui/tooltip'
 import { queryManager } from '../utils/query'
 import {
   updateAllLists,
@@ -278,52 +282,84 @@ const listColumn = [
   StringColumn({
     title: 'Name',
     mapDataToValue: (data) => data.name || '',
-    lineClamp: 3,
   }),
-  NumericalColumn({
+  CategoricalColumn({
     title: 'PID',
-    format: NUMERICAL_FORMATS.DEFAULT,
     mapDataToValue: (data) => parseInt(data.pid) || 0,
   }),
-  StringColumn({
+  CategoricalColumn({
     title: 'Status',
-    mapDataToValue: (data) => data.status || '',
-    lineClamp: 3,
+    mapDataToValue: (data) => data.status || 'LOADING',
   }),
-  StringColumn({
+  CustomColumn({
     title: 'Last Message',
     mapDataToValue: (data) => data.lastMessage || '',
-    lineClamp: 3,
+    minWidth: 500,
+    maxWidth: 500,
+    renderCell: ({ value }) => (
+      <StatefulTooltip
+        placement={PLACEMENT.top}
+        dismissOnEsc={false}
+        dismissOnClickOutside={false}
+        triggerType={TRIGGER_TYPE.hover}
+        content={() => (
+          <Block maxWidth="60vw" height="auto">
+            <p>{value}</p>
+          </Block>
+        )}
+      >
+        {value.substring(0, 72)}
+      </StatefulTooltip>
+    ),
   }),
   NumericalColumn({
     title: 'Block Height',
-    format: NUMERICAL_FORMATS.DEFAULT,
     mapDataToValue: (data) => parseInt(data.paraBlockDispatchedTo || 0),
   }),
   StringColumn({
     title: 'Public Key',
     mapDataToValue: (data) => '0x' + (data.publicKey || ''),
-    lineClamp: 3,
+  }),
+  CategoricalColumn({
+    title: 'State',
+    mapDataToValue: (data) => data.minerInfo?.state || 'Unknown',
+  }),
+  NumericalColumn({
+    title: 'V',
+    precision: 2,
+    mapDataToValue: (data) => parseFloat(data.minerInfo?.v) || 0,
+  }),
+  NumericalColumn({
+    title: 'Ve',
+    precision: 2,
+    mapDataToValue: (data) => parseFloat(data.minerInfo?.ve) || 0,
+  }),
+  NumericalColumn({
+    title: 'pInit',
+    mapDataToValue: (data) =>
+      parseInt(data.minerInfo?.raw?.benchmark?.pInit) || 0,
+  }),
+  NumericalColumn({
+    title: 'pInstant',
+    mapDataToValue: (data) =>
+      parseInt(data.minerInfo?.raw?.benchmark?.pInstant) || 0,
   }),
   StringColumn({
-    title: 'Miner Status',
-    mapDataToValue: (data) => data.minerInfoJson || '',
-    lineClamp: 3,
+    title: 'Minted',
+    mapDataToValue: (data) => data.minerInfo?.stats?.totalReward || '0',
   }),
+
   StringColumn({
     title: 'Miner Account',
     mapDataToValue: (data) => data.minerAccountId || '',
-    lineClamp: 3,
   }),
   StringColumn({
     title: 'Stake Amount(BN)',
     mapDataToValue: (data) => data.stake || 0,
-    lineClamp: 3,
   }),
   StringColumn({
     title: 'UUID',
     mapDataToValue: (data) => data.uuid || '',
-    lineClamp: 3,
   }),
   NumericalColumn({
     title: 'parentHeaderSynchedTo',
@@ -335,6 +371,27 @@ const listColumn = [
     format: NUMERICAL_FORMATS.DEFAULT,
     mapDataToValue: (data) => parseInt(data.paraHeaderSynchedTo || 0),
   }),
+  CustomColumn({
+    title: 'Miner Info',
+    mapDataToValue: (data) => data.minerInfoJson || '',
+    minWidth: 90,
+    maxWidth: 90,
+    renderCell: ({ value }) => (
+      <StatefulTooltip
+        placement={PLACEMENT.top}
+        dismissOnEsc={false}
+        dismissOnClickOutside={false}
+        triggerType={TRIGGER_TYPE.hover}
+        content={() => (
+          <Block maxWidth="60vw" height="auto">
+            <pre>{value}</pre>
+          </Block>
+        )}
+      >
+        Hover
+      </StatefulTooltip>
+    ),
+  }),
   BooleanColumn({
     title: 'Initialized',
     mapDataToValue: (data) => !!data.initialized,
@@ -342,7 +399,6 @@ const listColumn = [
   StringColumn({
     title: 'Endpoint',
     mapDataToValue: (data) => data.endpoint || '',
-    lineClamp: 3,
   }),
   BooleanColumn({
     title: 'Enabled',
@@ -410,7 +466,6 @@ const WorkersList = ({ workers }) => {
           rows={rows}
           rowActions={rowActions}
           resizableColumnWidths
-          rowHeight={78}
         />
       </div>
       <WorkerRowEditModal
