@@ -283,7 +283,7 @@ const listColumn = [
     title: 'Name',
     mapDataToValue: (data) => data.name || '',
   }),
-  CategoricalColumn({
+  NumericalColumn({
     title: 'PID',
     mapDataToValue: (data) => parseInt(data.pid) || 0,
   }),
@@ -460,7 +460,7 @@ const WorkersList = ({ workers }) => {
 
   return (
     <>
-      <div className={css({ height: 'calc(100vh - 270px)' })}>
+      <div className={css({ height: 'calc(100vh - 300px)' })}>
         <StatefulDataTable
           columns={listColumn}
           rows={rows}
@@ -468,6 +468,8 @@ const WorkersList = ({ workers }) => {
           resizableColumnWidths
         />
       </div>
+      <p>Total: {rows.length}</p>
+
       <WorkerRowEditModal
         currentRow={currentRow}
         clearCurrentRow={() => setCurrentRow(null)}
