@@ -12,7 +12,6 @@ import {
 } from 'baseui/data-table'
 import { Button, KIND, SHAPE, SIZE } from 'baseui/button'
 import { Card, StyledBody } from 'baseui/card'
-import { Delete, Overflow, Plus } from 'baseui/icon'
 import { FORM_ERROR } from 'final-form'
 import { Field, Form } from 'react-final-form'
 import { HeaderWrapper } from '../components/PageWrapper'
@@ -26,6 +25,7 @@ import {
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
 import { PLACEMENT, StatefulTooltip, TRIGGER_TYPE } from 'baseui/tooltip'
+import { Plus } from 'baseui/icon'
 import { queryManager } from '../utils/query'
 import {
   updateAllLists,
@@ -442,20 +442,74 @@ const WorkersList = ({ workers }) => {
     },
     [updateLists]
   )
+  const killRow = useCallback(
+    async ({ row }) => {
+      if (!window.confirm(`Kill worker #${row.data.uuid}?`)) {
+        return
+      }
+      await queryManager({
+        queryKey: [
+          {
+            requestKickWorker: {
+              requests: [
+                {
+                  id: { uuid: row.data.uuid },
+                },
+              ],
+            },
+          },
+        ],
+      })
+      window.alert('Success!')
+    },
+    [updateLists]
+  )
+  const restartRow = useCallback(
+    async ({ row }) => {
+      if (!window.confirm(`Restart worker #${row.data.uuid}?`)) {
+        return
+      }
+      await queryManager({
+        queryKey: [
+          {
+            requestStartWorkerLifecycle: {
+              requests: [
+                {
+                  id: { uuid: row.data.uuid },
+                },
+              ],
+            },
+          },
+        ],
+      })
+      window.alert('Success!')
+    },
+    [updateLists]
+  )
   const rowActions = useMemo(
     () => [
       {
+        label: 'Kill',
+        onClick: killRow,
+        renderIcon: () => <p>Kill</p>,
+      },
+      {
+        label: 'Restart',
+        onClick: restartRow,
+        renderIcon: () => <p>Restart</p>,
+      },
+      {
         label: 'Delete',
         onClick: deleteRow,
-        renderIcon: ({ size }) => <Delete size={size} />,
+        renderIcon: () => <p>Delete</p>,
       },
       {
         label: 'Edit',
         onClick: ({ row }) => setCurrentRow(row),
-        renderIcon: ({ size }) => <Overflow size={size} />,
+        renderIcon: () => <p>Edit</p>,
       },
     ],
-    [deleteRow, setCurrentRow]
+    [killRow, restartRow, deleteRow, setCurrentRow]
   )
 
   return (
