@@ -24,7 +24,5 @@ RUN yarn install
 COPY . .
 
 RUN yarn proto:build
-RUN yarn build
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["yarn"]
+ENTRYPOINT ["./entrypoint.sh"]
