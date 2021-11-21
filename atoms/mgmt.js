@@ -12,6 +12,8 @@ export const nsList = (process.env.NEXT_PUBLIC_NS_LIST || 'prb+default')
   .split(',')
   .map((i) => i.trim())
 
+console.log(process.env.NEXT_PUBLIC_NS_LIST)
+
 export const currentNs = atom(nsList[0])
 
 export const setNs = atom(null, (get, set, ns) => {

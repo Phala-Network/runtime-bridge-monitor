@@ -26,4 +26,5 @@ COPY . .
 RUN yarn proto:build
 RUN yarn build
 
-ENTRYPOINT [ "yarn", "start" ]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["yarn"]
