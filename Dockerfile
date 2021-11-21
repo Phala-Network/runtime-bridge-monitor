@@ -25,4 +25,4 @@ COPY . .
 
 RUN yarn proto:build
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
