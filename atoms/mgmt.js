@@ -8,9 +8,9 @@ import produce from 'immer'
 const workersArr = atom([])
 const poolsArr = atom([])
 
-export const nsList = process.env.NEXT_PUBLIC_NS_LIST.split(',').map((i) =>
-  i.trim()
-)
+export const nsList = (process.env.NEXT_PUBLIC_NS_LIST || 'prb+default')
+  .split(',')
+  .map((i) => i.trim())
 
 export const currentNs = atom(nsList[0])
 
