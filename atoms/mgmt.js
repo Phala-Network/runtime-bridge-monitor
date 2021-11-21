@@ -1,12 +1,26 @@
 import { CALL_ONLINE_LIFECYCLE_MANAGER, queryManager } from '../utils/query'
 import { atom, useAtom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useQuery } from 'react-query'
-import { useUpdateAtom } from 'jotai/utils'
 import produce from 'immer'
 
 const workersArr = atom([])
 const poolsArr = atom([])
+
+export const nsList = process.env.NEXT_PUBLIC_NS_LIST.split(',').map((i) =>
+  i.trim()
+)
+
+export const currentNs = atom(nsList[0])
+
+export const setNs = atom(null, (get, set, ns) => {
+  if (get(currentNs) !== ns) {
+    set(workersArr, [])
+    set(poolsArr, [])
+  }
+  set(currentNs, ns)
+})
 
 export const updateAllLists = atom(null, (get, set, { workers, pools }) => {
   set(workersArr, workers)
@@ -15,14 +29,15 @@ export const updateAllLists = atom(null, (get, set, { workers, pools }) => {
 
 export const useUpdatedLists = () => {
   const updateLists = useUpdateAtom(updateAllLists)
-  const { data } = useQuery([CALL_ONLINE_LIFECYCLE_MANAGER], queryManager)
+  const ns = useAtomValue(currentNs)
+  const { data } = useQuery([ns, CALL_ONLINE_LIFECYCLE_MANAGER], queryManager)
 
   useEffect(() => {
     const res = data?.lifecycleManagerStateUpdate
     if (res) {
       updateLists({ workers: res.workers || [], pools: res.pools || [] })
     }
-  }, [data])
+  }, [ns, data])
 }
 const workerStatesAtom = atom({})
 const workerListWithState = atom((get) => {
@@ -41,6 +56,7 @@ const updateWorkerState = atom(null, async (get, set, workers) => {
     workerStateUpdate: { workerStates },
   } = await queryManager({
     queryKey: [
+      get(currentNs),
       {
         queryWorkerState: {
           ids: workers.map((i) => ({ uuid: i.uuid })),

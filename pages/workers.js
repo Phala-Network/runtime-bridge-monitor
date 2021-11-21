@@ -24,19 +24,21 @@ import {
   ModalHeader,
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
+import { NsSelector } from './pools'
 import { PLACEMENT, StatefulTooltip, TRIGGER_TYPE } from 'baseui/tooltip'
 import { Plus } from 'baseui/icon'
-import { queryManager } from '../utils/query'
 import {
+  currentNs,
   updateAllLists,
   useUpdatedLists,
   useWorkerListWithStates,
   workers as workersAtom,
 } from '../atoms/mgmt'
+import { queryManager } from '../utils/query'
 import { useAtom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useStyletron } from 'baseui'
-import { useUpdateAtom } from 'jotai/utils'
 import BN from 'bn.js'
 import Head from 'next/head'
 
@@ -155,11 +157,13 @@ const WorkerRowEditModal = ({ currentRow, clearCurrentRow }) => {
     () => (currentRow ? currentRow.data : {}),
     [currentRow]
   )
+  const ns = useAtomValue(currentNs)
   const submit = useCallback(
     async (values) => {
       try {
         const { lifecycleManagerStateUpdate } = await queryManager({
           queryKey: [
+            ns,
             {
               requestUpdateWorker: {
                 items: [
@@ -189,7 +193,7 @@ const WorkerRowEditModal = ({ currentRow, clearCurrentRow }) => {
         }
       }
     },
-    [currentRow]
+    [ns, currentRow]
   )
   return (
     <Modal
@@ -211,12 +215,14 @@ const WorkerRowEditModal = ({ currentRow, clearCurrentRow }) => {
 const CreateWorkerModalWithButton = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const updateLists = useUpdateAtom(updateAllLists)
+  const ns = useAtomValue(currentNs)
 
   const submit = useCallback(
     async (values) => {
       try {
         const { lifecycleManagerStateUpdate } = await queryManager({
           queryKey: [
+            ns,
             {
               requestCreateWorker: {
                 workers: [values],
@@ -241,7 +247,7 @@ const CreateWorkerModalWithButton = () => {
         }
       }
     },
-    [updateLists]
+    [ns, updateLists]
   )
 
   return (
@@ -411,6 +417,7 @@ const WorkersList = ({ workers }) => {
   const [css] = useStyletron()
   const updateLists = useUpdateAtom(updateAllLists)
   const rows = useWorkerListWithStates(workers)
+  const ns = useAtomValue(currentNs)
 
   const deleteRow = useCallback(
     async ({ row }) => {
@@ -419,6 +426,7 @@ const WorkersList = ({ workers }) => {
       }
       const { lifecycleManagerStateUpdate } = await queryManager({
         queryKey: [
+          ns,
           {
             requestUpdateWorker: {
               items: [
@@ -440,7 +448,7 @@ const WorkersList = ({ workers }) => {
         workers: lifecycleManagerStateUpdate.workers || [],
       })
     },
-    [updateLists]
+    [ns, updateLists]
   )
   const killRow = useCallback(
     async ({ row }) => {
@@ -449,6 +457,7 @@ const WorkersList = ({ workers }) => {
       }
       await queryManager({
         queryKey: [
+          ns,
           {
             requestKickWorker: {
               requests: [
@@ -462,7 +471,7 @@ const WorkersList = ({ workers }) => {
       })
       window.alert('Success!')
     },
-    [updateLists]
+    [ns, updateLists]
   )
   const restartRow = useCallback(
     async ({ row }) => {
@@ -471,6 +480,7 @@ const WorkersList = ({ workers }) => {
       }
       await queryManager({
         queryKey: [
+          ns,
           {
             requestStartWorkerLifecycle: {
               requests: [
@@ -484,7 +494,7 @@ const WorkersList = ({ workers }) => {
       })
       window.alert('Success!')
     },
-    [updateLists]
+    [ns, updateLists]
   )
   const rowActions = useMemo(
     () => [
@@ -542,6 +552,7 @@ const WorkersPage = () => {
       </Head>
       <HeaderWrapper>
         <HeadingXLarge marginRight={'auto'}>Workers</HeadingXLarge>
+        <NsSelector />
         <CreateWorkerModalWithButton />
       </HeaderWrapper>
       <div style={{ margin: '0 42px' }}>

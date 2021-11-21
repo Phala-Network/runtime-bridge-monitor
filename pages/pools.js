@@ -10,6 +10,7 @@ import {
 } from 'baseui/data-table'
 import { Button, KIND, SHAPE, SIZE } from 'baseui/button'
 import { Card, StyledBody } from 'baseui/card'
+import { Combobox } from 'baseui/combobox'
 import { Delete, Overflow, Plus } from 'baseui/icon'
 import { FORM_ERROR } from 'final-form'
 import { Field, Form } from 'react-final-form'
@@ -24,15 +25,18 @@ import {
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
 import {
+  currentNs,
+  nsList,
   pools as poolsAtom,
+  setNs,
   updateAllLists,
   useUpdatedLists,
 } from '../atoms/mgmt'
 import { queryManager } from '../utils/query'
 import { useAtom } from 'jotai'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useStyletron } from 'baseui'
-import { useUpdateAtom } from 'jotai/utils'
 import Head from 'next/head'
 
 const PoolModalForm = ({ initValues, onSubmit, setModalClose }) => {
@@ -156,6 +160,7 @@ const PoolModalForm = ({ initValues, onSubmit, setModalClose }) => {
 const PoolRowEditModal = ({ currentRow, clearCurrentRow }) => {
   const modalOpen = useMemo(() => !!currentRow, [currentRow])
   const updateLists = useUpdateAtom(updateAllLists)
+  const ns = useAtomValue(currentNs)
   const initValues = useMemo(
     () =>
       currentRow
@@ -174,6 +179,7 @@ const PoolRowEditModal = ({ currentRow, clearCurrentRow }) => {
       try {
         const { lifecycleManagerStateUpdate } = await queryManager({
           queryKey: [
+            ns,
             {
               requestUpdatePool: {
                 items: [
@@ -212,7 +218,7 @@ const PoolRowEditModal = ({ currentRow, clearCurrentRow }) => {
         }
       }
     },
-    [currentRow]
+    [currentRow, ns]
   )
   return (
     <Modal
@@ -234,12 +240,14 @@ const PoolRowEditModal = ({ currentRow, clearCurrentRow }) => {
 const CreatePoolModalWithButton = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const updateLists = useUpdateAtom(updateAllLists)
+  const ns = useAtomValue(currentNs)
 
   const submit = useCallback(
     async (values) => {
       try {
         const { lifecycleManagerStateUpdate } = await queryManager({
           queryKey: [
+            ns,
             {
               requestCreatePool: {
                 pools: [
@@ -275,7 +283,7 @@ const CreatePoolModalWithButton = () => {
         }
       }
     },
-    [updateLists]
+    [ns, updateLists]
   )
 
   return (
@@ -341,6 +349,7 @@ const PoolsList = ({ pools }) => {
   const [currentRow, setCurrentRow] = useState(null)
   const [css] = useStyletron()
   const updateLists = useUpdateAtom(updateAllLists)
+  const ns = useAtomValue(currentNs)
   const deleteRow = useCallback(
     async ({ row }) => {
       if (!window.confirm(`Delete pool #${row.data.pid}?`)) {
@@ -348,6 +357,7 @@ const PoolsList = ({ pools }) => {
       }
       const { lifecycleManagerStateUpdate } = await queryManager({
         queryKey: [
+          ns,
           {
             requestUpdatePool: {
               items: [
@@ -369,7 +379,7 @@ const PoolsList = ({ pools }) => {
         workers: lifecycleManagerStateUpdate.workers || [],
       })
     },
-    [updateLists]
+    [ns, updateLists]
   )
   const rowActions = useMemo(
     () => [
@@ -418,6 +428,7 @@ const PoolsPage = () => {
       </Head>
       <HeaderWrapper>
         <HeadingXLarge marginRight={'auto'}>Pools</HeadingXLarge>
+        <NsSelector />
         <CreatePoolModalWithButton />
       </HeaderWrapper>
       <div style={{ margin: '0 42px' }}>
@@ -430,6 +441,19 @@ const PoolsPage = () => {
         </Card>
       </div>
     </div>
+  )
+}
+
+export const NsSelector = () => {
+  const ns = useAtomValue(currentNs)
+  const setNsFn = useUpdateAtom(setNs)
+  return (
+    <Combobox
+      mapOptionToString={(o) => o}
+      options={nsList}
+      value={ns}
+      onChange={(e) => setNsFn(e)}
+    />
   )
 }
 

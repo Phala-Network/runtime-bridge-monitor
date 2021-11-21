@@ -3,9 +3,7 @@ import { REDIS_ENDPOINT } from '../utils/constants'
 import { createDispatcher, createMessageTunnel } from '../message'
 import logger from '../utils/logger'
 
-let server
-
-const setServer = async () => {
+const setServer = async (ns) => {
   const injectMessage = (message) =>
     Object.assign(message, {
       context: {
@@ -17,6 +15,7 @@ const setServer = async () => {
   const tunnelConnection = await createMessageTunnel({
     redisEndpoint: REDIS_ENDPOINT,
     from: MessageTarget.MTG_APP,
+    ns,
   })
 
   const { subscribe, query } = tunnelConnection
@@ -53,11 +52,13 @@ const setServer = async () => {
   return { query, tunnelConnection, dispatcher }
 }
 
-export const getServer = async () => {
-  if (server) {
-    return server
+const servers = {}
+
+export const getServer = async (ns) => {
+  if (servers[ns]) {
+    return servers[ns]
   }
-  server = await setServer()
-  return server
+  servers[ns] = await setServer(ns)
+  return servers[ns]
 }
 export default getServer

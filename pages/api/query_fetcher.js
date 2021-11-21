@@ -3,7 +3,7 @@ import { MessageTarget } from '../../message/proto'
 import getServer from '../../server'
 
 const queryFetcher = async (options) => {
-  const { query } = await getServer()
+  const { query } = await getServer(process.env.NS_FETCH)
 
   return query({
     to: MessageTarget.MTG_FETCHER,

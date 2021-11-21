@@ -16,8 +16,8 @@ const query = async (url, data) => {
   return content
 }
 
-export const queryManager = ({ queryKey: [data] }) => {
-  return query('/api/query_manager', data)
+export const queryManager = ({ queryKey: [ns, data] }) => {
+  return query(`/api/query_manager?ns=${ns}`, data)
 }
 
 export const queryFetcher = ({ queryKey: [data] }) => {

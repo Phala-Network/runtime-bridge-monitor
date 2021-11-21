@@ -1,6 +1,9 @@
 import { Cell, Grid } from 'baseui/layout-grid'
+import { Combobox } from 'baseui/combobox'
 import { StyledTabList, Tab, Tabs } from 'baseui/tabs-motion'
+import { currentNs, nsList } from '../atoms/mgmt'
 import { styled } from 'baseui'
+import { useAtomValue } from 'jotai/utils'
 import { useRouter } from 'next/router'
 
 const ROUTES = [
@@ -25,6 +28,7 @@ const TabsOverrides = {
 
 const AppNavbar = () => {
   const { route, push } = useRouter()
+
   return (
     <Tabs
       activeKey={route}
