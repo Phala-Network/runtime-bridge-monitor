@@ -11,7 +11,13 @@ const defaultEncode = (request) =>
   Message.encode(Message.create(request)).finish()
 const defaultDecode = (message) => Message.decode(message).toJSON()
 
-const createMessageTunnel = async ({ redisEndpoint, from, encode, decode }) => {
+const createMessageTunnel = async ({
+  redisEndpoint,
+  from,
+  encode,
+  decode,
+  ns,
+}) => {
   const pubClient = await createRedisClient(redisEndpoint)
   const subClient = await createRedisClient(redisEndpoint)
 
@@ -35,6 +41,7 @@ const createMessageTunnel = async ({ redisEndpoint, from, encode, decode }) => {
       nonceRef,
       type,
       content: request,
+      ns,
     })
 
     await pubClient.publish(APP_MESSAGE_TUNNEL_CHANNEL, data)
@@ -104,8 +111,9 @@ const createMessageTunnel = async ({ redisEndpoint, from, encode, decode }) => {
           if (!_message) {
             return
           }
-
-          dispatcher.dispatch(_message)
+          if (_message.ns === ns) {
+            dispatcher.dispatch(_message)
+          }
         })
         resolve(count)
       })
