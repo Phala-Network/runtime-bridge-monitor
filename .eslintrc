@@ -1,19 +1,18 @@
 {
+  "parser": "@typescript-eslint/parser",
   "env": { "browser": true, "es2021": true, "node": true },
   "extends": [
-    "plugin:react/recommended",
-    "standard",
-    "plugin:prettier/recommended"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended"
   ],
-  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaFeatures": { "jsx": true },
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "sort-imports-es6-autofix"],
+  "plugins": ["@typescript-eslint", "sort-imports-es6-autofix"],
   "rules": {
-    "no-unused-vars": "off",
     "sort-imports-es6-autofix/sort-imports-es6": [
       "error",
       {
@@ -27,6 +26,9 @@
     "react/react-in-jsx-scope": "off",
     "react/display-name": "off"
   },
-  "settings": { "react": { "version": "detect" } },
-  "globals": { "__server_import": "readonly" }
+  "globals": {
+    "$logger": "writable",
+    "$redis": "writable"
+  },
+  "settings": { "react": { "version": "detect" } }
 }

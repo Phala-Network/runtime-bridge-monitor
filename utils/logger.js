@@ -1,7 +1,7 @@
 import { createLogger } from 'bunyan'
 
 export const logger = createLogger({
-  level: process.env.LOGGER_LEVEL || 'info',
+  level: process.env.LOGGER_LEVEL || 'debug',
   name: 'prb',
   src: true,
 })
