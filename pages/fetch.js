@@ -67,17 +67,7 @@ export default function Home() {
       k,
       <code key={k}>{`${data[k]}`}</code>,
     ])
-    if (ret.length && !data?.synched) {
-      ret.push(['Speed(block/s)', <code key="blockPerSec">{blockPerSec}</code>])
-      ret.push([
-        'Blocks to reach target',
-        <code key="delta">{data?.paraKnownHeight - data?.paraBlobHeight}</code>,
-      ])
-      ret.push([
-        'Estimated finish time',
-        <code key="estimatedTime">{estimatedTime}</code>,
-      ])
-    }
+
     return ret
   }, [
     data,

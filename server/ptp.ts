@@ -9,14 +9,9 @@ const listenAddresses = process.env.PTP_LISTEN_ADDRESSES
   ? process.env.PTP_LISTEN_ADDRESSES.split(',').map((i) => i.trim())
   : []
 
-const bootstrapAddresses = process.env.PTP_BOOT_NODES
-  ? process.env.PTP_BOOT_NODES.split(',').map((i) => i.trim())
-  : [
-      // '/ip4/10.87.0.40/tcp/28888/p2p/QmSM92JK5roLq7gEyRdEmUBRANmgWLTvUHxrqTJRezVgtG',
-      // '/ip4/10.87.0.40/tcp/29888/p2p/QmQEpDovsU8GCYYZuUUNjZKszTcRX4xHpQQBm1caYzpiy4',
-      '/ip4/10.87.0.40/tcp/28888/p2p/QmXRL9YgzZHcJsqMsp5t32g93PuFBVCK7JtGPXUAjU18Lw',
-      '/ip4/10.87.0.40/tcp/29888/p2p/QmbzXNQZrDyvvJcHuGA4MGqBTxqaNhstpiK7Z8xoVRjpwY',
-    ]
+const bootstrapAddresses = process.env.PTP_BOOT_NODES.split(',').map((i) =>
+  i.trim()
+)
 
 export const createPtpContext = async () => {
   const peerId = await PeerId.create({ bits: 2048, keyType: 'RSA' })

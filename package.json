@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "ts-node server/index.ts",
     "build": "next build",
-    "start": "next start",
+    "start": "ts-node server/index.ts",
     "proto:build": "pbjs -t static-module --no-beautify -p ./vendor/proto -o ./message/proto.generated.js -w es6 ./vendor/proto/message.proto && sed -i \"s/import \\* as $protobuf/import $protobuf/g\" ./message/proto.generated.js",
     "proto:darwin:build": "pbjs -t static-module --no-beautify -p ./vendor/proto -o ./message/proto.generated.js -w es6 ./vendor/proto/message.proto && gsed -i \"s/import \\* as $protobuf/import $protobuf/g\" ./message/proto.generated.js"
   },

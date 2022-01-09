@@ -6,11 +6,7 @@ import { styled } from 'baseui'
 import { useAtomValue } from 'jotai/utils'
 import { useRouter } from 'next/router'
 
-const ROUTES = [
-  { route: '/fetch', name: 'Fetcher' },
-  { route: '/workers', name: 'Workers' },
-  { route: '/pools', name: 'Pools' },
-]
+const ROUTES = [{ route: '/discover', name: 'Peer Discovery' }]
 
 const TabsOverrides = {
   TabList: {
