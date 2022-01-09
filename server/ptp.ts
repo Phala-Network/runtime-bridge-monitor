@@ -83,7 +83,7 @@ export const createPtpContext = async () => {
   const router = express.Router()
   router.use(express.json())
 
-  router.get('/discover', handlePtpDiscover)
+  router.all('/discover', handlePtpDiscover)
   router.all('/proxy/:peerIdStr/:method', handlePtpProxy)
 
   return {

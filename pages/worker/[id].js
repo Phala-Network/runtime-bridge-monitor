@@ -10,12 +10,12 @@ import {
   StatefulDataTable,
   StringColumn,
 } from 'baseui/data-table'
-import { Button, KIND, SHAPE, SIZE } from 'baseui/button'
 import { Card, StyledBody } from 'baseui/card'
 import { FORM_ERROR } from 'final-form'
 import { Field, Form } from 'react-final-form'
-import { HeaderWrapper } from '../components/PageWrapper'
+import { HeaderWrapper } from '../../components/PageWrapper'
 import { HeadingXLarge } from 'baseui/typography'
+import { KIND } from 'baseui/button'
 import {
   Modal,
   ModalBody,
@@ -24,22 +24,14 @@ import {
   ModalHeader,
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
-import { NsSelector } from './pools'
 import { PLACEMENT, StatefulTooltip, TRIGGER_TYPE } from 'baseui/tooltip'
-import { Plus } from 'baseui/icon'
-import {
-  currentNs,
-  updateAllLists,
-  useUpdatedLists,
-  useWorkerListWithStates,
-  workers as workersAtom,
-} from '../atoms/mgmt'
-import { queryManager } from '../utils/query'
-import { useAtom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useCallback, useMemo, useState } from 'react'
-import { useStyletron } from 'baseui'
 import BN from 'bn.js'
+
+import { queryManager } from '../../utils/query'
+import { useCallback, useMemo, useState } from 'react'
+import { useQuery } from 'react-query'
+import { useRouter } from 'next/router'
+import { useStyletron } from 'baseui'
 import Head from 'next/head'
 
 const BN_1PHA = new BN('1000000000000')
@@ -147,140 +139,6 @@ const WorkerModalForm = ({ initValues, onSubmit, setModalClose }) => {
         )
       }}
     />
-  )
-}
-
-const WorkerRowEditModal = ({ currentRow, clearCurrentRow }) => {
-  const modalOpen = useMemo(() => !!currentRow, [currentRow])
-  const updateLists = useUpdateAtom(updateAllLists)
-  const initValues = useMemo(
-    () => (currentRow ? currentRow.data : {}),
-    [currentRow]
-  )
-  const ns = useAtomValue(currentNs)
-  const submit = useCallback(
-    async (values) => {
-      try {
-        const { lifecycleManagerStateUpdate } = await queryManager({
-          queryKey: [
-            ns,
-            {
-              requestUpdateWorker: {
-                items: [
-                  {
-                    id: { uuid: currentRow.data.uuid },
-                    worker: values,
-                  },
-                ],
-              },
-            },
-          ],
-        })
-        updateLists({
-          pools: lifecycleManagerStateUpdate.pools || [],
-          workers: lifecycleManagerStateUpdate.workers || [],
-        })
-        clearCurrentRow()
-        return {}
-      } catch (e) {
-        if (e.isProtoError) {
-          return {
-            [FORM_ERROR]: e.extra,
-          }
-        }
-        return {
-          [FORM_ERROR]: e,
-        }
-      }
-    },
-    [ns, currentRow]
-  )
-  return (
-    <Modal
-      onClose={clearCurrentRow}
-      isOpen={modalOpen}
-      unstable_ModalBackdropScroll={true}
-      closeable={false}
-    >
-      <ModalHeader>Edit Worker</ModalHeader>
-      <WorkerModalForm
-        setModalClose={clearCurrentRow}
-        initValues={initValues}
-        onSubmit={submit}
-      />
-    </Modal>
-  )
-}
-
-const CreateWorkerModalWithButton = () => {
-  const [modalOpen, setModalOpen] = useState(false)
-  const updateLists = useUpdateAtom(updateAllLists)
-  const ns = useAtomValue(currentNs)
-
-  const submit = useCallback(
-    async (values) => {
-      try {
-        const { lifecycleManagerStateUpdate } = await queryManager({
-          queryKey: [
-            ns,
-            {
-              requestCreateWorker: {
-                workers: [values],
-              },
-            },
-          ],
-        })
-        updateLists({
-          pools: lifecycleManagerStateUpdate.pools || [],
-          workers: lifecycleManagerStateUpdate.workers || [],
-        })
-        setModalOpen(false)
-        return {}
-      } catch (e) {
-        if (e.isProtoError) {
-          return {
-            [FORM_ERROR]: e.extra,
-          }
-        }
-        return {
-          [FORM_ERROR]: e,
-        }
-      }
-    },
-    [ns, updateLists]
-  )
-
-  return (
-    <>
-      <Button
-        onClick={() => setModalOpen(true)}
-        shape={SHAPE.pill}
-        size={SIZE.compact}
-        overrides={{
-          Root: {
-            style: {
-              height: '36px',
-            },
-          },
-        }}
-      >
-        <Plus />
-        Add
-      </Button>
-      <Modal
-        onClose={() => setModalOpen(false)}
-        isOpen={modalOpen}
-        unstable_ModalBackdropScroll={true}
-        closeable={false}
-      >
-        <ModalHeader>Add Worker</ModalHeader>
-        <WorkerModalForm
-          setModalClose={() => setModalOpen(false)}
-          initValues={{ enabled: true }}
-          onSubmit={submit}
-        />
-      </Modal>
-    </>
   )
 }
 
@@ -415,86 +273,78 @@ const listColumn = [
 const WorkersList = ({ workers }) => {
   const [currentRow, setCurrentRow] = useState(null)
   const [css] = useStyletron()
-  const updateLists = useUpdateAtom(updateAllLists)
-  const rows = useWorkerListWithStates(workers)
-  const ns = useAtomValue(currentNs)
+  const router = useRouter()
+  const { id } = router.query
 
   const deleteRow = useCallback(
     async ({ row }) => {
       if (!window.confirm(`Delete worker #${row.data.uuid}?`)) {
         return
       }
-      const { lifecycleManagerStateUpdate } = await queryManager({
-        queryKey: [
-          ns,
-          {
-            requestUpdateWorker: {
-              items: [
-                {
-                  id: { uuid: row.data.uuid },
-                  worker: {
-                    ...row.data,
-                    deleted: true,
-                  },
-                },
-              ],
+      const { hasError, error } = await fetch(`/ptp/proxy/${id}/UpdateWorker`, {
+        method: 'POST',
+        body: JSON.stringify({
+          items: [
+            {
+              id: { uuid: row.data.uuid },
+              pool: {
+                deleted: true,
+              },
             },
-          },
-        ],
-      })
-      window.alert('Success!')
-      updateLists({
-        pools: lifecycleManagerStateUpdate.pools || [],
-        workers: lifecycleManagerStateUpdate.workers || [],
-      })
+          ],
+        }),
+      }).then((res) => res.json())
+
+      if (hasError) {
+        console.error(error)
+      }
+
+      window.alert(hasError ? error.toString() : 'Success!')
     },
-    [ns, updateLists]
+    [workers]
   )
   const killRow = useCallback(
     async ({ row }) => {
       if (!window.confirm(`Kill worker #${row.data.uuid}?`)) {
         return
       }
-      await queryManager({
-        queryKey: [
-          ns,
-          {
-            requestKickWorker: {
-              requests: [
-                {
-                  id: { uuid: row.data.uuid },
-                },
-              ],
-            },
-          },
-        ],
-      })
-      window.alert('Success!')
+      const { hasError, error } = await fetch(`/ptp/proxy/${id}/KillWorker`, {
+        method: 'POST',
+        body: JSON.stringify({
+          ids: [row.data.uuid],
+        }),
+      }).then((res) => res.json())
+
+      if (hasError) {
+        console.error(error)
+      }
+
+      window.alert(hasError ? error.toString() : 'Success!')
     },
-    [ns, updateLists]
+    [workers]
   )
   const restartRow = useCallback(
     async ({ row }) => {
       if (!window.confirm(`Restart worker #${row.data.uuid}?`)) {
         return
       }
-      await queryManager({
-        queryKey: [
-          ns,
-          {
-            requestStartWorkerLifecycle: {
-              requests: [
-                {
-                  id: { uuid: row.data.uuid },
-                },
-              ],
-            },
-          },
-        ],
-      })
-      window.alert('Success!')
+      const { hasError, error } = await fetch(
+        `/ptp/proxy/${id}/RestartWorker`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            ids: [row.data.uuid],
+          }),
+        }
+      ).then((res) => res.json())
+
+      if (hasError) {
+        console.error(error)
+      }
+
+      window.alert(hasError ? error.toString() : 'Success!')
     },
-    [ns, updateLists]
+    [workers]
   )
   const rowActions = useMemo(
     () => [
@@ -522,6 +372,18 @@ const WorkersList = ({ workers }) => {
     [killRow, restartRow, deleteRow, setCurrentRow]
   )
 
+  const rows = useMemo(
+    () =>
+      workers.map((i) => ({
+        id: i.worker.uuid,
+        data: Object.assign(i, {
+          ...i.worker,
+          minerInfo: JSON.parse(i.minerInfoJson || '{}'),
+        }),
+      })),
+    [workers]
+  )
+
   return (
     <>
       <div className={css({ height: 'calc(100vh - 300px)' })}>
@@ -532,7 +394,7 @@ const WorkersList = ({ workers }) => {
           resizableColumnWidths
         />
       </div>
-      <p>Total: {rows.length}</p>
+      <p>Total: {workers.length}</p>
 
       <WorkerRowEditModal
         currentRow={currentRow}
@@ -542,9 +404,96 @@ const WorkersList = ({ workers }) => {
   )
 }
 
-const WorkersPage = () => {
-  const [workers] = useAtom(workersAtom)
-  useUpdatedLists()
+const WorkerRowEditModal = ({ currentRow, clearCurrentRow }) => {
+  const modalOpen = useMemo(() => !!currentRow, [currentRow])
+  const initValues = useMemo(
+    () => (currentRow ? currentRow.data : {}),
+    [currentRow]
+  )
+
+  const router = useRouter()
+  const { id } = router.query
+  const submit = useCallback(
+    async (values) => {
+      try {
+        const { hasError, error } = await fetch(
+          `/ptp/proxy/${id}/UpdateWorker`,
+          {
+            method: 'POST',
+            body: JSON.stringify({
+              items: [
+                {
+                  id: {
+                    uuid: currentRow.data.uuid,
+                  },
+                  worker: values,
+                },
+              ],
+            }),
+          }
+        ).then((res) => res.json())
+
+        if (hasError) {
+          console.error(error)
+        }
+
+        window.alert(hasError ? error.toString() : 'Success!')
+
+        clearCurrentRow()
+        return {}
+      } catch (e) {
+        if (e.isProtoError) {
+          return {
+            [FORM_ERROR]: e.extra,
+          }
+        }
+        return {
+          [FORM_ERROR]: e,
+        }
+      }
+    },
+    [currentRow, id]
+  )
+  return (
+    <Modal
+      onClose={clearCurrentRow}
+      isOpen={modalOpen}
+      unstable_ModalBackdropScroll={true}
+      closeable={false}
+    >
+      <ModalHeader>Edit Worker</ModalHeader>
+      <WorkerModalForm
+        setModalClose={clearCurrentRow}
+        initValues={initValues}
+        onSubmit={submit}
+      />
+    </Modal>
+  )
+}
+
+const WorkerPage = () => {
+  const router = useRouter()
+  const { id } = router.query
+
+  // const { data: workerList } = useQuery(
+  //   id,
+  //   () => fetch(`/ptp/proxy/${id}/ListWorker`).then((res) => res.json()),
+  //   { refetchInterval: 3000 }
+  // )
+
+  const { data: workerStatus } = useQuery(
+    id,
+    () => fetch(`/ptp/proxy/${id}/GetWorkerStatus`).then((res) => res.json()),
+    { refetchInterval: 3000 }
+  )
+  //
+
+  const workers = workerStatus?.data?.workerStates || []
+  // const workers = useMemo(() => {
+  //   console.log(workerList?.data?.workers, workerStatus?.data?.workers)
+  //   return []
+  // }, [workerList, workerStatus])
+
   return (
     <div>
       <Head>
@@ -552,7 +501,7 @@ const WorkersPage = () => {
       </Head>
       <HeaderWrapper>
         <HeadingXLarge marginRight={'auto'}>Workers</HeadingXLarge>
-        <CreateWorkerModalWithButton />
+        {/*<CreateWorkerModalWithButton />*/}
       </HeaderWrapper>
       <div style={{ margin: '0 42px' }}>
         <Card overrides={{ Root: { style: { width: '100%' } } }}>
@@ -567,4 +516,4 @@ const WorkersPage = () => {
   )
 }
 
-export default WorkersPage
+export default WorkerPage

@@ -24,8 +24,10 @@ const PeerItem = ({ peer, children, ...rest }) => (
 )
 
 export default function DiscoverPage() {
-  const { isLoading, error, data } = useQuery('discover', () =>
-    fetch('/ptp/discover').then((res) => res.json())
+  const { isLoading, error, data } = useQuery(
+    'discover',
+    () => fetch('/ptp/discover', { method: 'POST' }).then((res) => res.json()),
+    { refetchInterval: 1500 }
   )
 
   const [css] = useStyletron()
