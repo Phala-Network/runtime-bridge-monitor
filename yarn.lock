@@ -470,10 +470,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@phala/runtime-bridge-walkie@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@phala/runtime-bridge-walkie/-/runtime-bridge-walkie-1.1.1.tgz#7108fb53d49af0d35a679b05cfebe7a33b4deade"
-  integrity sha512-wfP4PPs3JbMvIY5FyL/EymV6d+wvV/vaeG8gyBEonkDJXWhFX1Mo3eRmEqD2t5XQ8huPgs2etCYouV+0I5YxlA==
+"@phala/runtime-bridge-walkie@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@phala/runtime-bridge-walkie/-/runtime-bridge-walkie-1.2.2.tgz#18f2890fc0211b57b47d99c11e9b6cb45978aed8"
+  integrity sha512-qHhXedCy/k3/JfW5pFiYAezeD6b+vfUHeq1gOEXsVFpTNnt3+PGxPJBytdiOMZuPiUWGVQvA6vOh0heeNNrMpA==
   dependencies:
     "@chainsafe/libp2p-noise" "^5.0.0"
     "@types/bunyan" "^1.8.8"

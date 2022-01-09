@@ -7,16 +7,19 @@ import type { WalkiePeerStore } from '@phala/runtime-bridge-walkie/src/peer'
 
 const listenAddresses = process.env.PTP_LISTEN_ADDRESSES
   ? process.env.PTP_LISTEN_ADDRESSES.split(',').map((i) => i.trim())
-  : ['/ip4/0.0.0.0/tcp/28888', '/ip6/::/tcp/28889']
+  : []
 
 const bootstrapAddresses = process.env.PTP_BOOT_NODES
   ? process.env.PTP_BOOT_NODES.split(',').map((i) => i.trim())
   : [
-      '/ip4/10.96.89.143/tcp/28888/p2p/12D3KooWQVeK3BDr8hMPpqrY69kXxX8VUnVfahrv8rZ5pfnodJky',
+      // '/ip4/10.87.0.40/tcp/28888/p2p/QmSM92JK5roLq7gEyRdEmUBRANmgWLTvUHxrqTJRezVgtG',
+      // '/ip4/10.87.0.40/tcp/29888/p2p/QmQEpDovsU8GCYYZuUUNjZKszTcRX4xHpQQBm1caYzpiy4',
+      '/ip4/10.87.0.40/tcp/28888/p2p/QmXRL9YgzZHcJsqMsp5t32g93PuFBVCK7JtGPXUAjU18Lw',
+      '/ip4/10.87.0.40/tcp/29888/p2p/QmbzXNQZrDyvvJcHuGA4MGqBTxqaNhstpiK7Z8xoVRjpwY',
     ]
 
 export const createPtpContext = async () => {
-  const peerId = await PeerId.create()
+  const peerId = await PeerId.create({ bits: 2048, keyType: 'RSA' })
   const ptpNode = await createPtpNode({
     peerId,
     role: prb.WalkieRoles.WR_CLIENT,
@@ -28,6 +31,10 @@ export const createPtpContext = async () => {
 
   await ptpNode.start()
   logger.info(`PtpNode started as ${peerId.toB58String()}`)
+
+  ptpNode.node.multiaddrs.forEach((ma) => {
+    logger.debug('Listening on', `${ma.toString()}/p2p/${peerId.toB58String()}`)
+  })
 
   const getReturnPeers = (store: WalkiePeerStore) =>
     Object.values(store).map((i) => ({
@@ -41,16 +48,10 @@ export const createPtpContext = async () => {
 
   const handlePtpDiscover: RequestHandler = (req, res) => {
     res.contentType('application/json')
-    res.send(
-      JSON.stringify({
-        dataProviders: getReturnPeers(
-          ptpNode.peerManager.internalDataProviders
-        ),
-        lifecycleManagers: getReturnPeers(
-          ptpNode.peerManager.lifecycleManagers
-        ),
-      })
-    )
+    res.send({
+      dataProviders: getReturnPeers(ptpNode.peerManager.internalDataProviders),
+      lifecycleManagers: getReturnPeers(ptpNode.peerManager.lifecycleManagers),
+    })
   }
 
   const handlePtpProxy: RequestHandler = async (req, res) => {
@@ -88,7 +89,7 @@ export const createPtpContext = async () => {
   router.use(express.json())
 
   router.get('/discover', handlePtpDiscover)
-  router.post('/proxy/:peerIdStr/:method', handlePtpProxy)
+  router.all('/proxy/:peerIdStr/:method', handlePtpProxy)
 
   return {
     router,

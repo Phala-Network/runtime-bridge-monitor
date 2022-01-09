@@ -4,7 +4,7 @@ import router from 'next/router'
 
 const IndexPage = () => {
   useEffect(() => {
-    router.push('/fetch')
+    router.push('/discover')
   }, [])
   return (
     <div>
