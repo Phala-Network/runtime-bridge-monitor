@@ -10,7 +10,7 @@
     "proto:darwin:build": "pbjs -t static-module --no-beautify -p ./vendor/proto -o ./message/proto.generated.js -w es6 ./vendor/proto/message.proto && gsed -i \"s/import \\* as $protobuf/import $protobuf/g\" ./message/proto.generated.js"
   },
   "dependencies": {
-    "@phala/runtime-bridge-walkie": "^1.2.3",
+    "@phala/runtime-bridge-walkie": "^1.2.4",
     "axios": "^0.24.0",
     "baseui": "^10.1.0",
     "baseui-final-form": "^5.0.0",
