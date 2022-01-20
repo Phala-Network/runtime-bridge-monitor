@@ -1,4 +1,4 @@
-import BN from 'bn.js'
+import BN from '../../node_modules/bn.js/lib/bn'
 
 export const APP_RECEIVED_HEIGHT = 'APP_RECEIVED_HEIGHT'
 export const APP_VERIFIED_HEIGHT = 'APP_VERIFIED_HEIGHT'

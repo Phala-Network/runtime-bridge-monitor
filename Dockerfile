@@ -24,4 +24,6 @@ RUN yarn install
 
 COPY . .
 
+RUN yarn next build
+
 ENTRYPOINT ["sh", "./entrypoint.sh"]

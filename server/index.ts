@@ -1,6 +1,6 @@
 import { createPtpContext } from './ptp'
 import express from 'express'
-import logger from '../utils/logger'
+import logger from '../src/utils/logger'
 import next from 'next'
 
 const port = parseInt(process.env.PORT, 10) || 3000

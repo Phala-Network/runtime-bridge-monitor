@@ -39,9 +39,10 @@
     "jsx": "preserve"
   },
   "include": [
-    "./**/*"
+    "server",
+    "types"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
   ]
 }

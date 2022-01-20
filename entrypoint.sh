@@ -1,1 +1,1 @@
-yarn dev
+yarn start

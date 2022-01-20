@@ -27,3 +27,12 @@ export const queryFetcher = ({ queryKey: [data] }) => {
 export const CALL_ONLINE_LIFECYCLE_MANAGER = {
   callOnlineLifecycleManager: {},
 }
+
+export const queryProxy = (peerId, method, data) =>
+  fetch(`/ptp/proxy/${peerId}/${method}`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((res) => res.json())

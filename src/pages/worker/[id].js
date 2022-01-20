@@ -25,9 +25,9 @@ import {
 } from 'baseui/modal'
 import { KIND as NOTIFICATION_KIND, Notification } from 'baseui/notification'
 import { PLACEMENT, StatefulTooltip, TRIGGER_TYPE } from 'baseui/tooltip'
-import BN from 'bn.js'
+import BN from '../../../node_modules/bn.js/lib/bn'
 
-import { queryManager } from '../../utils/query'
+import { queryManager, queryProxy } from '../../utils/query'
 import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
@@ -281,19 +281,16 @@ const WorkersList = ({ workers }) => {
       if (!window.confirm(`Delete worker #${row.data.uuid}?`)) {
         return
       }
-      const { hasError, error } = await fetch(`/ptp/proxy/${id}/UpdateWorker`, {
-        method: 'POST',
-        body: JSON.stringify({
-          items: [
-            {
-              id: { uuid: row.data.uuid },
-              pool: {
-                deleted: true,
-              },
+      const { hasError, error } = await queryProxy(id, 'UpdateWorker', {
+        items: [
+          {
+            id: { uuid: row.data.uuid },
+            pool: {
+              deleted: true,
             },
-          ],
-        }),
-      }).then((res) => res.json())
+          },
+        ],
+      })
 
       if (hasError) {
         console.error(error)
@@ -308,12 +305,9 @@ const WorkersList = ({ workers }) => {
       if (!window.confirm(`Kill worker #${row.data.uuid}?`)) {
         return
       }
-      const { hasError, error } = await fetch(`/ptp/proxy/${id}/KillWorker`, {
-        method: 'POST',
-        body: JSON.stringify({
-          ids: [row.data.uuid],
-        }),
-      }).then((res) => res.json())
+      const { hasError, error } = await queryProxy(id, 'KillWorker', {
+        ids: [row.data.uuid],
+      })
 
       if (hasError) {
         console.error(error)
@@ -328,15 +322,10 @@ const WorkersList = ({ workers }) => {
       if (!window.confirm(`Restart worker #${row.data.uuid}?`)) {
         return
       }
-      const { hasError, error } = await fetch(
-        `/ptp/proxy/${id}/RestartWorker`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            ids: [row.data.uuid],
-          }),
-        }
-      ).then((res) => res.json())
+
+      const { hasError, error } = await queryProxy(id, 'RestartWorker', {
+        ids: [row.data.uuid],
+      })
 
       if (hasError) {
         console.error(error)
@@ -416,22 +405,16 @@ const WorkerRowEditModal = ({ currentRow, clearCurrentRow }) => {
   const submit = useCallback(
     async (values) => {
       try {
-        const { hasError, error } = await fetch(
-          `/ptp/proxy/${id}/UpdateWorker`,
-          {
-            method: 'POST',
-            body: JSON.stringify({
-              items: [
-                {
-                  id: {
-                    uuid: currentRow.data.uuid,
-                  },
-                  worker: values,
-                },
-              ],
-            }),
-          }
-        ).then((res) => res.json())
+        const { hasError, error } = await queryProxy(id, 'UpdateWorker', {
+          items: [
+            {
+              id: {
+                uuid: currentRow.data.uuid,
+              },
+              worker: values,
+            },
+          ],
+        })
 
         if (hasError) {
           console.error(error)
@@ -483,7 +466,7 @@ const WorkerPage = () => {
 
   const { data: workerStatus } = useQuery(
     id,
-    () => fetch(`/ptp/proxy/${id}/GetWorkerStatus`).then((res) => res.json()),
+    () => queryProxy(id, 'GetWorkerStatus', {}),
     { refetchInterval: 3000 }
   )
   //

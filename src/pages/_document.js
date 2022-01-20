@@ -1,5 +1,5 @@
 import { Provider as StyletronProvider } from 'styletron-react'
-import { styletron } from '../styletron'
+import { styletron } from '../../styletron'
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 class MyDocument extends Document {

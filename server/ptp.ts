@@ -1,7 +1,7 @@
 import { RpcMethodName, createPtpNode, prb } from '@phala/runtime-bridge-walkie'
 import PeerId from 'peer-id'
 import express from 'express'
-import logger from '../utils/logger'
+import logger from '../src/utils/logger'
 import type { RequestHandler } from 'express'
 import type { WalkiePeerStore } from '@phala/runtime-bridge-walkie/src/peer'
 

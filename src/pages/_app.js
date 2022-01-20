@@ -1,7 +1,7 @@
 import { BaseProvider, LightTheme } from 'baseui'
 import { Provider as JotaiProvider } from 'jotai'
 import { Provider as StyletronProvider } from 'styletron-react'
-import { _styletron as styletron } from '../styletron'
+import { _styletron as styletron } from '../../styletron'
 
 import '../styles/globals.css'
 import { QueryClient, QueryClientProvider } from 'react-query'

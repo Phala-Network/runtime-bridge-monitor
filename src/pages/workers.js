@@ -39,7 +39,7 @@ import { useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useStyletron } from 'baseui'
-import BN from 'bn.js'
+import BN from '../../node_modules/bn.js/lib/bn'
 import Head from 'next/head'
 
 const BN_1PHA = new BN('1000000000000')
