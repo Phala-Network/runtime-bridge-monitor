@@ -305,7 +305,7 @@ const WorkersList = ({ workers }) => {
       if (!window.confirm(`Kill worker #${row.data.uuid}?`)) {
         return
       }
-      const { hasError, error } = await queryProxy(id, 'KillWorker', {
+      const { hasError, error } = await queryProxy(id, 'KickWorker', {
         ids: [row.data.uuid],
       })
 
