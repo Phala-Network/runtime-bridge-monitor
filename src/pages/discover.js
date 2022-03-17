@@ -1,13 +1,5 @@
-import {
-  Col,
-  Container,
-  Dropdown,
-  DropdownButton,
-  ListGroup,
-  Stack,
-} from 'react-bootstrap'
+import { Col, Container, Dropdown, ListGroup, Stack } from 'react-bootstrap'
 import { useQuery } from 'react-query'
-import { useRouter } from 'next/router'
 import PageWrapper, { PageStatusOverlay } from '../components/PageWrapper'
 
 const DiscoverPageWrapper = ({ children }) => {

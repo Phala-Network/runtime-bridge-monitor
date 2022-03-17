@@ -7,7 +7,7 @@ const PageWrapper = ({ children, title, hideLinks = false }) => {
   return (
     <>
       <Head>
-        <title>Peer Discovery</title>
+        <title>{title}</title>
       </Head>
       <Stack gap={4}>
         <Topbar name={title} hideLinks={hideLinks} />
