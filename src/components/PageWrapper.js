@@ -1,58 +1,57 @@
-import { Cell, Grid } from 'baseui/layout-grid'
-import { Combobox } from 'baseui/combobox'
-import { StyledTabList, Tab, Tabs } from 'baseui/tabs-motion'
-import { currentNs, nsList } from '../atoms/mgmt'
-import { styled } from 'baseui'
-import { useAtomValue } from 'jotai/utils'
-import { useRouter } from 'next/router'
+import { Alert, Container, Spinner, Stack } from 'react-bootstrap'
+import Head from 'next/head'
+import Topbar from './Topbar'
+import styled from 'styled-components'
 
-const ROUTES = [{ route: '/discover', name: 'Peer Discovery' }]
-
-const TabsOverrides = {
-  TabList: {
-    component: function TabsListOverride(props) {
-      return (
-        <Grid>
-          <Cell span={12}>
-            <StyledTabList {...props} />
-          </Cell>
-        </Grid>
-      )
-    },
-  },
-}
-
-const AppNavbar = () => {
-  const { route, push } = useRouter()
-
-  return (
-    <Tabs
-      activeKey={route}
-      onChange={({ activeKey }) => {
-        push(activeKey)
-      }}
-      overrides={TabsOverrides}
-    >
-      {ROUTES.map(({ route, name }) => (
-        <Tab key={route} route={route} title={name} />
-      ))}
-    </Tabs>
-  )
-}
-
-const PageWrapper = ({ children }) => {
+const PageWrapper = ({ children, title, hideLinks = false }) => {
   return (
     <>
-      <AppNavbar />
-      {children}
+      <Head>
+        <title>Peer Discovery</title>
+      </Head>
+      <Stack gap={4}>
+        <Topbar name={title} hideLinks={hideLinks} />
+        {children}
+      </Stack>
     </>
   )
 }
 
-export const HeaderWrapper = styled('div', {
-  display: 'flex',
-  margin: '0 56px',
-  alignItems: 'center',
-})
-
 export default PageWrapper
+
+const OverlayWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  left: 0;
+  top: 0;
+  position: fixed;
+  align-items: center;
+  place-content: center;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(3px);
+`
+
+export const PageStatusOverlay = ({ isLoading = true, error }) => {
+  return isLoading || error ? (
+    <OverlayWrapper>
+      {isLoading && !error ? (
+        <Spinner animation="grow" role="status" variant="secondary">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      ) : null}
+      {error && (
+        <Container>
+          <Alert variant="danger" dismissible={false}>
+            <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+            <pre>
+              {error instanceof Error
+                ? error.toString()
+                : JSON.stringify(error)}
+            </pre>
+          </Alert>
+        </Container>
+      )}
+    </OverlayWrapper>
+  ) : null
+}

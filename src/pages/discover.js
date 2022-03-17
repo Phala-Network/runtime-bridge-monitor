@@ -1,27 +1,118 @@
-import { Button } from 'baseui/button'
-import { Card, StyledBody } from 'baseui/card'
-import { HeaderWrapper } from '../components/PageWrapper'
-import { HeadingSmall, HeadingXLarge } from 'baseui/typography'
-import { ListItem, ListItemLabel } from 'baseui/list'
-import { SIZE, StyledSpinnerNext } from 'baseui/spinner'
+import {
+  Col,
+  Container,
+  Dropdown,
+  DropdownButton,
+  ListGroup,
+  Stack,
+} from 'react-bootstrap'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
-import { useStyletron, withStyle } from 'baseui'
-import Head from 'next/head'
+import PageWrapper, { PageStatusOverlay } from '../components/PageWrapper'
 
-const LoadingIcon = withStyle(StyledSpinnerNext, {
-  display: 'inline-block',
-  verticalAlign: '-4px',
-  marginRight: '8px',
-})
+const DiscoverPageWrapper = ({ children }) => {
+  return (
+    <PageWrapper title="Peer Discovery" hideLinks>
+      <Container fluid="xxl">
+        <Col>{children}</Col>
+      </Container>
+    </PageWrapper>
+  )
+}
 
-const PeerItem = ({ peer, children, ...rest }) => (
-  <ListItem {...rest}>
-    <ListItemLabel description={children}>
-      <pre>{JSON.stringify(peer, null, 2)}</pre>
-    </ListItemLabel>
-  </ListItem>
-)
+const DiscoverPageData = ({ data }) => {
+  return (
+    <Container>
+      <Stack gap={2}>
+        {!!data.dataProviders.length && (
+          <>
+            <h4>Data Providers({data.dataProviders.length})</h4>
+            <ListGroup as="ol">
+              {data.dataProviders.map((i) => (
+                <ListGroup.Item
+                  as="li"
+                  key={i.peerId}
+                  className="d-flex justify-content-end align-items-start "
+                >
+                  <div className="ms-2 me-2 overflow-auto w-100">
+                    <p> </p>
+                    <pre>{JSON.stringify(i, null, 2)}</pre>
+                  </div>
+                  <Dropdown className="position-absolute mt-2">
+                    <Dropdown.Toggle
+                      variant="secondary"
+                      id={`dropdown-${i.peerId}`}
+                      className="opacity-50"
+                    >
+                      Actions
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        href={`/dp/status/${i.peerId}`}
+                        target="_blank"
+                      >
+                        Status
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </>
+        )}
+        {!!data.lifecycleManagers.length && (
+          <>
+            <p> </p>
+            <h4>Lifecycle Managers({data.lifecycleManagers.length})</h4>
+            <ListGroup as="ol">
+              {data.lifecycleManagers.map((i) => (
+                <ListGroup.Item
+                  as="li"
+                  key={i.peerId}
+                  className="d-flex justify-content-end align-items-start "
+                >
+                  <div className="ms-2 me-2 overflow-auto w-100">
+                    <p> </p>
+                    <pre>{JSON.stringify(i, null, 2)}</pre>
+                  </div>
+                  <Dropdown className="position-absolute mt-2">
+                    <Dropdown.Toggle
+                      variant="secondary"
+                      id={`dropdown-${i.peerId}`}
+                      className="opacity-50"
+                    >
+                      Actions
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        href={`/lifecycle/status/${i.peerId}`}
+                        target="_blank"
+                      >
+                        Status
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        href={`/lifecycle/pool/${i.peerId}`}
+                        target="_blank"
+                      >
+                        Manage Pools
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        href={`/lifecycle/worker/${i.peerId}`}
+                        target="_blank"
+                      >
+                        Manage Workers
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </>
+        )}
+      </Stack>
+    </Container>
+  )
+}
 
 export default function DiscoverPage() {
   const { isLoading, error, data } = useQuery(
@@ -30,118 +121,10 @@ export default function DiscoverPage() {
     { refetchInterval: 1500 }
   )
 
-  const [css] = useStyletron()
-  const router = useRouter()
-
   return (
-    <div>
-      <Head>
-        <title>Peer Discovery</title>
-      </Head>
-      <HeaderWrapper>
-        <HeadingXLarge marginRight={'auto'}>Peer Discovery</HeadingXLarge>
-      </HeaderWrapper>
-      <div style={{ margin: '0 64px' }}>
-        {isLoading ? (
-          <Card overrides={{ Root: { style: { width: '100%' } } }}>
-            {isLoading ? (
-              <StyledBody>
-                <p>
-                  <LoadingIcon $size={SIZE.small} />
-                  Waiting for data...
-                </p>
-              </StyledBody>
-            ) : (
-              <div className={css({ width: '100%' })}>
-                {error ? (
-                  error.toString()
-                ) : (
-                  <>
-                    {data?.dataProviders?.length ? (
-                      <>
-                        <HeadingSmall>Data Providers</HeadingSmall>
-                      </>
-                    ) : null}
-                  </>
-                )}
-              </div>
-            )}
-          </Card>
-        ) : (
-          <>
-            <>{error ? <p>{error.toString()}</p> : null}</>
-            <>
-              {data?.dataProviders?.length ? (
-                <>
-                  <HeadingSmall margin="0 auto 21px">
-                    Data Providers
-                  </HeadingSmall>
-                  <Card overrides={{ Root: { style: { width: '100%' } } }}>
-                    <ul
-                      className={css({
-                        width: '100%',
-                        paddingLeft: 0,
-                        paddingRight: 0,
-                      })}
-                    >
-                      {data.dataProviders.map((i, idx) => (
-                        <PeerItem peer={i} key={`dp-${idx}`}>
-                          <Button
-                            onClick={() =>
-                              router.push(`/data_provider/${i.peerId}`)
-                            }
-                          >
-                            Status
-                          </Button>
-                        </PeerItem>
-                      ))}
-                    </ul>
-                  </Card>
-                </>
-              ) : null}
-            </>
-            <>
-              {data?.lifecycleManagers?.length ? (
-                <>
-                  <HeadingSmall margin="36px auto 21px">
-                    Lifecycle Managers
-                  </HeadingSmall>
-                  <Card overrides={{ Root: { style: { width: '100%' } } }}>
-                    <ul
-                      className={css({
-                        width: '100%',
-                        paddingLeft: 0,
-                        paddingRight: 0,
-                      })}
-                    >
-                      {data.lifecycleManagers.map((i, idx) => (
-                        <PeerItem peer={i} key={`lm-${idx}`}>
-                          <Button
-                            onClick={() => router.push(`/worker/${i.peerId}`)}
-                          >
-                            Workers
-                          </Button>
-                          <div
-                            className={css({
-                              width: '12px',
-                              display: 'inline-block',
-                            })}
-                          />
-                          <Button
-                            onClick={() => router.push(`/pool/${i.peerId}`)}
-                          >
-                            Pools
-                          </Button>
-                        </PeerItem>
-                      ))}
-                    </ul>
-                  </Card>
-                </>
-              ) : null}
-            </>
-          </>
-        )}
-      </div>
-    </div>
+    <DiscoverPageWrapper>
+      {data && <DiscoverPageData data={data} />}
+      <PageStatusOverlay error={error} isLoading={isLoading} />
+    </DiscoverPageWrapper>
   )
 }
