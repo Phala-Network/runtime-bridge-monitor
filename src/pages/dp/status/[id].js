@@ -1,13 +1,4 @@
-import {
-  Badge,
-  Card,
-  Col,
-  Container,
-  ListGroup,
-  Row,
-  Stack,
-  Table,
-} from 'react-bootstrap'
+import { Badge, Col, Container, Row, Stack, Table } from 'react-bootstrap'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
@@ -35,7 +26,6 @@ const DataProviderStatusData = ({ data }) => {
       </span>,
     ])
   }, [data])
-  console.log(list)
 
   return (
     <Stack gap={2}>
@@ -86,8 +76,11 @@ const DataProviderStatusPage = () => {
 
   return (
     <DataProviderStatusPageWrapper>
-      {data && <DataProviderStatusData data={data} />}
-      <PageStatusOverlay error={error} isLoading={isLoading} />
+      {data && !data?.hasError && <DataProviderStatusData data={data} />}
+      <PageStatusOverlay
+        error={data?.hasError ? data : error}
+        isLoading={isLoading}
+      />
     </DataProviderStatusPageWrapper>
   )
 }

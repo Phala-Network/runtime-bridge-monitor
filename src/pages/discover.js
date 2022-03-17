@@ -83,13 +83,13 @@ const DiscoverPageData = ({ data }) => {
                         Status
                       </Dropdown.Item>
                       <Dropdown.Item
-                        href={`/lifecycle/pool/${i.peerId}`}
+                        href={`/lifecycle/pools/${i.peerId}`}
                         target="_blank"
                       >
                         Manage Pools
                       </Dropdown.Item>
                       <Dropdown.Item
-                        href={`/lifecycle/worker/${i.peerId}`}
+                        href={`/lifecycle/workers/${i.peerId}`}
                         target="_blank"
                       >
                         Manage Workers
@@ -115,8 +115,11 @@ export default function DiscoverPage() {
 
   return (
     <DiscoverPageWrapper>
-      {data && <DiscoverPageData data={data} />}
-      <PageStatusOverlay error={error} isLoading={isLoading} />
+      {data && !data?.hasError && <DiscoverPageData data={data} />}
+      <PageStatusOverlay
+        error={data?.hasError ? data : error}
+        isLoading={isLoading}
+      />
     </DiscoverPageWrapper>
   )
 }

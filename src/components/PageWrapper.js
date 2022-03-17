@@ -3,14 +3,23 @@ import Head from 'next/head'
 import Topbar from './Topbar'
 import styled from 'styled-components'
 
-const PageWrapper = ({ children, title, hideLinks = false }) => {
+const PageWrapper = ({
+  children,
+  title,
+  hideLinks = false,
+  showLifecycleLinks = false,
+}) => {
   return (
     <>
       <Head>
         <title>{title}</title>
       </Head>
       <Stack gap={4}>
-        <Topbar name={title} hideLinks={hideLinks} />
+        <Topbar
+          name={title}
+          hideLinks={hideLinks}
+          showLifecycleLinks={showLifecycleLinks}
+        />
         {children}
       </Stack>
     </>
@@ -47,7 +56,7 @@ export const PageStatusOverlay = ({ isLoading = true, error }) => {
             <pre>
               {error instanceof Error
                 ? error.toString()
-                : JSON.stringify(error)}
+                : JSON.stringify(error, null, 2)}
             </pre>
           </Alert>
         </Container>

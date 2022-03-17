@@ -1,5 +1,9 @@
+// import 'bootstrap/dist/css/bootstrap.min.css'
+import '../styles/global.scss'
+import 'ka-table/style.css'
+
 import '../styles/globals.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
+
 import { QueryClient, QueryClientProvider } from 'react-query'
 import SSRProvider from 'react-bootstrap/SSRProvider'
 
