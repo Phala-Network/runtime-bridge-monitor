@@ -31,7 +31,9 @@ export default function Topbar({
               )}
             </Nav>
             <Nav>
-              <Nav.Link href="/discover">Peer Discovery</Nav.Link>
+              <Nav.Link target="_blank" href="/discover">
+                Peer Discovery
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         )}

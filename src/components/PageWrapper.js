@@ -39,6 +39,7 @@ const OverlayWrapper = styled.div`
   place-content: center;
   background: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(3px);
+  z-index: 1000;
 `
 
 export const PageStatusOverlay = ({ isLoading = true, error }) => {

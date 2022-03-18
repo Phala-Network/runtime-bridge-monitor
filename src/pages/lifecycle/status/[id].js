@@ -32,7 +32,7 @@ import PageWrapper, { PageStatusOverlay } from '../../../components/PageWrapper'
 
 const LifecycleManagerStatusPageWrapper = ({ children }) => {
   return (
-    <PageWrapper title={`Lifecycle Manager Status`} showLifecycleLinks>
+    <PageWrapper title={`Lifecycle Manager`} showLifecycleLinks>
       <Container fluid={true}>{children}</Container>
     </PageWrapper>
   )
@@ -292,7 +292,7 @@ const tablePropsInit = {
     pageIndex: 0,
     pageSize: 100,
     pageSizes: [50, 100, 300, 500],
-    position: PagingPosition.TopAndBottom,
+    position: PagingPosition.Bottom,
   },
   format: ({ column, value }) => {
     if (column.inlineCode === true) {

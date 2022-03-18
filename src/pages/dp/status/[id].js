@@ -6,7 +6,7 @@ import PageWrapper, { PageStatusOverlay } from '../../../components/PageWrapper'
 
 const DataProviderStatusPageWrapper = ({ children }) => {
   return (
-    <PageWrapper title={`Data Provider Status`}>
+    <PageWrapper title={`Data Provider`}>
       <Container fluid="xxl">
         <Container>{children}</Container>
       </Container>

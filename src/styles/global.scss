@@ -41,11 +41,8 @@ $pagination-active-border-color: $table-dark-bg;
   .ka-no-data-row{
     text-align: center;
   }
-  .ka-paging{
-    padding: 15px;
-  }
-  .ka-paging-page-index{
-    cursor: pointer;
+  .ka-paging-page-index, .ka-paging-size {
+    border-radius: 0 !important;
   }
   .table > :not(:first-child) {
     border-top: 0!important;
