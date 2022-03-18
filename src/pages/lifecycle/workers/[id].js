@@ -81,7 +81,6 @@ const EditModal = ({ title, onHide, initValue }) => {
       stake: Yup.string().trim().required('Required.'),
     }),
     onSubmit: async (values) => {
-      console.log(values)
       const item = {
         pid: parseInt(values.pid),
         name: values.name.trim(),
