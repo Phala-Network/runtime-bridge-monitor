@@ -1,5 +1,11 @@
 import { Badge, Col, Container, Row, Stack } from 'react-bootstrap'
-import { FilteringMode, PagingPosition, SortingMode } from 'ka-table/enums'
+import {
+  DataType,
+  EditingMode,
+  FilteringMode,
+  PagingPosition,
+  SortingMode,
+} from 'ka-table/enums'
 import { Table, kaReducer } from 'ka-table'
 import dynamic from 'next/dynamic'
 
@@ -34,53 +40,137 @@ const tablePropsInit = {
       key: 'name',
       title: 'Name',
       width: 150,
+      dataType: DataType.String,
+      inlineCode: true,
     },
     {
       key: 'pid',
       title: 'PID',
-      width: 80,
+      width: 120,
+      dataType: DataType.Number,
+      inlineCode: true,
     },
     {
       key: 'status',
       title: 'Status',
       width: 150,
+      dataType: DataType.String,
+      inlineCode: true,
     },
     {
       key: 'lastMessage',
       title: 'Last Message',
-      width: 'auto',
+      isResizable: true,
+      width: 600,
+      dataType: DataType.String,
+      inlineCode: true,
     },
     {
       key: 'paraBlockDispatchedTo',
-      title: 'Blk Height',
+      title: 'Block Height',
       width: 150,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'paraHeaderSynchedTo',
+      title: 'Header Height',
+      width: 150,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'parentHeaderSynchedTo',
+      title: 'Parent Header Height',
+      width: 150,
+      dataType: DataType.Number,
+      inlineCode: true,
     },
     {
       key: 'publicKey',
       title: 'Public Key',
       width: 600,
+      dataType: DataType.String,
+      inlineCode: true,
     },
-    { key: 'uuid', title: 'ID', width: 360 },
+    {
+      key: 'minerInfo.state',
+      title: 'On-chain State',
+      width: 180,
+      dataType: DataType.String,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.v',
+      title: 'V',
+      width: 180,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.ve',
+      title: 'Ve',
+      width: 180,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.raw.benchmark.pInstant',
+      title: 'pInstant',
+      width: 120,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.raw.benchmark.pInit',
+      title: 'pInit',
+      width: 120,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.raw.stats.totalReward',
+      title: 'Minted(BN)',
+      width: 220,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'minerAccountId',
+      title: 'Miner Account',
+      width: 420,
+      dataType: DataType.String,
+      inlineCode: true,
+    },
+    {
+      key: 'uuid',
+      title: 'ID',
+      width: 360,
+      dataType: DataType.String,
+      inlineCode: true,
+    },
   ],
   rowKeyField: 'id',
   sortingMode: SortingMode.Single,
+  editingMode: EditingMode.None,
   filteringMode: FilteringMode.FilterRow,
-  table: {
-    elementAttributes: () => ({
-      className: 'table table-striped table-hover table-bordered',
-    }),
-  },
-  tableHead: {
-    elementAttributes: () => ({
-      className: 'thead-dark',
-    }),
+  columnResizing: true,
+  childComponents: {
+    noDataRow: {
+      content: () => 'No Data Found',
+    },
   },
   paging: {
     enabled: true,
     pageIndex: 0,
-    pageSize: 20,
-    pageSizes: [10, 20, 50, 100],
+    pageSize: 100,
+    pageSizes: [50, 100, 300, 500],
     position: PagingPosition.TopAndBottom,
+  },
+  format: ({ column, value }) => {
+    if (column.inlineCode === true) {
+      return <code>{value}</code>
+    }
   },
 }
 
@@ -110,6 +200,7 @@ const LifecycleManagerStatusPage = () => {
     _workers.forEach((r) => {
       Object.assign(r, r.worker)
       r.id = r.uuid
+      r.minerInfo = JSON.parse(r.minerInfoJson || '{}')
     })
     return _workers
   }, [_workers])
