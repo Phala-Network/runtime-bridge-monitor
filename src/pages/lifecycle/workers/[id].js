@@ -34,7 +34,7 @@ import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import PageWrapper, { PageStatusOverlay } from '../../../components/PageWrapper'
 
-const LifecycleManagerPoolsPageWrapper = ({ children }) => {
+const LifecycleManagerWorkersPageWrapper = ({ children }) => {
   return (
     <PageWrapper title={`Lifecycle Manager`} showLifecycleLinks>
       <Container fluid={true}>{children}</Container>
@@ -42,12 +42,12 @@ const LifecycleManagerPoolsPageWrapper = ({ children }) => {
   )
 }
 
-const LifecycleManagerPoolsData = ({ pools }) => {
+const LifecycleManagerWorkersData = ({ workers }) => {
   return (
     <>
       <Row>
         <Container fluid={true}>
-          <DataTable pools={pools} />
+          <DataTable workers={workers} />
         </Container>
       </Row>
     </>
@@ -63,39 +63,38 @@ const EditModal = ({ title, onHide, initValue }) => {
       ? {
           pid: initValue.pid,
           name: initValue.name,
-          mnemonic: initValue.owner.mnemonic || '',
-          realPhalaSs58: initValue.realPhalaSs58 || '',
+          endpoint: initValue.endpoint,
+          stake: initValue.stake,
           enabled: initValue.enabled,
         }
       : {
           pid: '',
           name: '',
-          mnemonic: '',
-          realPhalaSs58: '',
+          endpoint: '',
+          stake: '',
           enabled: true,
         },
     validationSchema: Yup.object({
       pid: Yup.number().required('Required.'),
       name: Yup.string().trim().required('Required.'),
-      mnemonic: initValue
-        ? Yup.string().optional()
-        : Yup.string().trim().required('Required.'),
+      endpoint: Yup.string().trim().required('Required.'),
+      stake: Yup.string().trim().required('Required.'),
     }),
     onSubmit: async (values) => {
+      console.log(values)
       const item = {
         pid: parseInt(values.pid),
         name: values.name.trim(),
-        realPhalaSs58: values.realPhalaSs58.trim(),
+        endpoint: values.endpoint.trim(),
+        stake: values.stake.trim(),
         enabled: values.enabled,
       }
-      if (values.mnemonic.trim()) {
-        item.owner = { mnemonic: values.mnemonic.trim() }
-      }
+
       setLoading(true)
       try {
         const { hasError, error } = await queryProxy(
           id,
-          initValue ? 'UpdatePool' : 'CreatePool',
+          initValue ? 'UpdateWorker' : 'CreateWorker',
           initValue
             ? {
                 items: [
@@ -103,12 +102,12 @@ const EditModal = ({ title, onHide, initValue }) => {
                     id: {
                       uuid: initValue.uuid,
                     },
-                    pool: item,
+                    worker: item,
                   },
                 ],
               }
             : {
-                pools: [item],
+                workers: [item],
               }
         )
         if (hasError) {
@@ -147,7 +146,7 @@ const EditModal = ({ title, onHide, initValue }) => {
               <Form.Check
                 type="switch"
                 id="enabled"
-                label="Enable Pool"
+                label="Enable Worker"
                 onChange={form.handleChange}
                 checked={form.values.enabled}
               />
@@ -176,32 +175,28 @@ const EditModal = ({ title, onHide, initValue }) => {
                 {form.errors.name}
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group controlId="mnemonic" className="position-relative">
-              <Form.Label>Operator Mnemonic</Form.Label>
+            <Form.Group controlId="endpoint" className="position-relative">
+              <Form.Label>pRuntime Endpoint</Form.Label>
               <Form.Control
                 type="text"
-                name="mnemonic"
-                placeholder={initValue ? '(Unchanged)' : ''}
-                {...form.getFieldProps('mnemonic')}
-                isInvalid={form.errors.mnemonic && form.touched.mnemonic}
+                name="endpoint"
+                {...form.getFieldProps('endpoint')}
+                isInvalid={form.errors.endpoint && form.touched.endpoint}
               />
               <Form.Control.Feedback type="invalid" tooltip>
-                {form.errors.mnemonic}
+                {form.errors.endpoint}
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group controlId="realPhalaSs58" className="position-relative">
-              <Form.Label>Proxied Pool Owner Account</Form.Label>
+            <Form.Group controlId="stake" className="position-relative">
+              <Form.Label>Stake(BN)</Form.Label>
               <Form.Control
                 type="text"
-                name="realPhalaSs58"
-                placeholder="(None)"
-                {...form.getFieldProps('realPhalaSs58')}
-                isInvalid={
-                  form.errors.realPhalaSs58 && form.touched.realPhalaSs58
-                }
+                name="stake"
+                {...form.getFieldProps('stake')}
+                isInvalid={form.errors.stake && form.touched.stake}
               />
               <Form.Control.Feedback type="invalid" tooltip>
-                {form.errors.realPhalaSs58}
+                {form.errors.stake}
               </Form.Control.Feedback>
             </Form.Group>
           </Stack>
@@ -236,16 +231,16 @@ const tablePropsInit = {
       inlineCode: true,
     },
     {
-      key: 'owner.ss58Phala',
-      title: 'Operator',
+      key: 'endpoint',
+      title: 'pRuntime Endpoint',
       width: 360,
       dataType: DataType.String,
       inlineCode: true,
     },
     {
-      key: 'realPhalaSs58',
-      title: 'Proxied Owner Account',
-      width: 360,
+      key: 'stake',
+      title: 'Stake(BN)',
+      width: 200,
       dataType: DataType.String,
       inlineCode: true,
     },
@@ -306,15 +301,15 @@ const tablePropsInit = {
         )
 
         const deleteRow = useCallback(async () => {
-          if (!window.confirm(`Delete selected pools?`)) {
+          if (!window.confirm(`Delete selected workers?`)) {
             return
           }
-          const { hasError, error } = await queryProxy(id, 'UpdatePool', {
+          const { hasError, error } = await queryProxy(id, 'UpdateWorker', {
             items: selectedRows.map((i) => ({
               id: {
                 uuid: i,
               },
-              pool: {
+              worker: {
                 deleted: true,
               },
             })),
@@ -425,8 +420,8 @@ const tablePropsInit = {
   paging: {
     enabled: true,
     pageIndex: 0,
-    pageSize: 20,
-    pageSizes: [10, 20, 50],
+    pageSize: 100,
+    pageSizes: [50, 100, 300, 500],
     position: PagingPosition.Bottom,
   },
   format: ({ column, value }) => {
@@ -440,7 +435,7 @@ const tablePropsInit = {
   selectedRows: [],
 }
 
-const _DataTable = ({ pools }) => {
+const _DataTable = ({ workers }) => {
   const [tableProps, changeTableProps] = useState(tablePropsInit)
   const dispatch = (action) => {
     changeTableProps((prevState) => kaReducer(prevState, action))
@@ -448,7 +443,7 @@ const _DataTable = ({ pools }) => {
 
   return (
     <>
-      <Table data={pools} {...tableProps} dispatch={dispatch} />
+      <Table data={workers} {...tableProps} dispatch={dispatch} />
       <p style={{ height: '320px' }} />
     </>
   )
@@ -456,25 +451,25 @@ const _DataTable = ({ pools }) => {
 
 const DataTable = dynamic(() => Promise.resolve(_DataTable), { ssr: false })
 
-const LifecycleManagerPoolsPage = () => {
+const LifecycleManagerWorkersPage = () => {
   const router = useRouter()
   const { id } = router.query
 
   const { isLoading, error, data } = useQuery(
     id,
-    () => queryProxy(id, 'ListPool', {}),
+    () => queryProxy(id, 'ListWorker', {}),
     { refetchInterval: 3000 }
   )
 
-  const pools = data?.data?.pools || []
+  const workers = data?.data?.workers || []
 
   return (
-    <LifecycleManagerPoolsPageWrapper>
+    <LifecycleManagerWorkersPageWrapper>
       <Stack gap={2}>
         <Container>
           <Row>
             <Col md="auto">
-              <h4>Pools</h4>
+              <h4>Workers</h4>
             </Col>
             <Col>
               <Stack
@@ -486,20 +481,20 @@ const LifecycleManagerPoolsPage = () => {
                   <small>{id}</small>
                 </Badge>
                 <Badge bg="secondary">
-                  <small>Total count: {pools.length}</small>
+                  <small>Total count: {workers.length}</small>
                 </Badge>
               </Stack>
             </Col>
           </Row>
         </Container>
-        <LifecycleManagerPoolsData pools={pools} />
+        <LifecycleManagerWorkersData workers={workers} />
       </Stack>
       <PageStatusOverlay
         error={data?.hasError ? data : error}
         isLoading={isLoading}
       />
-    </LifecycleManagerPoolsPageWrapper>
+    </LifecycleManagerWorkersPageWrapper>
   )
 }
 
-export default LifecycleManagerPoolsPage
+export default LifecycleManagerWorkersPage
