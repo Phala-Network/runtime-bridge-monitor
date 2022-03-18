@@ -1,4 +1,14 @@
-import { Badge, Col, Container, Row, Stack } from 'react-bootstrap'
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  Col,
+  Container,
+  Row,
+  Stack,
+  Toast,
+  ToastContainer,
+} from 'react-bootstrap'
 import {
   DataType,
   EditingMode,
@@ -7,10 +17,15 @@ import {
   SortingMode,
 } from 'ka-table/enums'
 import { Table, kaReducer } from 'ka-table'
+import {
+  deselectAllRows,
+  deselectRow,
+  selectRow,
+} from 'ka-table/actionCreators'
 import dynamic from 'next/dynamic'
 
 import { queryProxy } from '../../../utils/query'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import PageWrapper, { PageStatusOverlay } from '../../../components/PageWrapper'
@@ -149,6 +164,12 @@ const tablePropsInit = {
       dataType: DataType.String,
       inlineCode: true,
     },
+    {
+      key: 'id',
+      title: 'ID',
+      visible: false,
+      dataType: DataType.String,
+    },
   ],
   rowKeyField: 'id',
   sortingMode: SortingMode.Single,
@@ -158,6 +179,112 @@ const tablePropsInit = {
   childComponents: {
     noDataRow: {
       content: () => 'No Data Found',
+    },
+    tableFoot: {
+      content: (props) => {
+        const { selectedRows, dispatch } = props
+
+        const router = useRouter()
+        const { id } = router.query
+
+        const restartRow = useCallback(async () => {
+          if (!window.confirm(`Restart selected workers?`)) {
+            return
+          }
+
+          const { hasError, error } = await queryProxy(id, 'RestartWorker', {
+            ids: selectedRows,
+          })
+
+          if (hasError) {
+            console.error(error)
+          } else {
+            dispatch(deselectAllRows())
+          }
+
+          window.alert(hasError ? error.toString() : 'Success!')
+        }, [selectedRows])
+
+        const killRow = useCallback(async () => {
+          if (!window.confirm(`Kill selected workers?`)) {
+            return
+          }
+          const { hasError, error } = await queryProxy(id, 'KickWorker', {
+            ids: selectedRows,
+          })
+
+          if (hasError) {
+            console.error(error)
+          } else {
+            dispatch(deselectAllRows())
+          }
+
+          window.alert(hasError ? error.toString() : 'Success!')
+        }, [selectedRows])
+
+        return (
+          <>
+            <ToastContainer
+              position="bottom-end"
+              className="p-3 position-fixed"
+            >
+              <Toast>
+                <Toast.Header closeButton={false}>
+                  Selected: {selectedRows.length}
+                </Toast.Header>
+                <Toast.Body>
+                  <Stack gap={2}>
+                    {!!selectedRows.length && (
+                      <ButtonGroup>
+                        <Button variant="danger" onClick={() => killRow()}>
+                          Kill
+                        </Button>
+                        <Button variant="warning" onClick={() => restartRow()}>
+                          Restart
+                        </Button>
+                      </ButtonGroup>
+                    )}
+                    <ButtonGroup>
+                      <Button
+                        variant="secondary"
+                        onClick={() => {
+                          props.data.forEach((i) => {
+                            if (selectedRows.includes(i.uuid)) {
+                              return
+                            }
+                            dispatch(selectRow(i.uuid))
+                          })
+                        }}
+                      >
+                        Select All
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => dispatch(deselectAllRows())}
+                      >
+                        Deselect All
+                      </Button>
+                    </ButtonGroup>
+                  </Stack>
+                </Toast.Body>
+              </Toast>
+            </ToastContainer>
+          </>
+        )
+      },
+    },
+    dataRow: {
+      elementAttributes: () => ({
+        onClick: (event, extendedEvent) => {
+          extendedEvent.dispatch(
+            extendedEvent.childProps.selectedRows.includes(
+              extendedEvent.childProps.rowKeyValue
+            )
+              ? deselectRow(extendedEvent.childProps.rowKeyValue)
+              : selectRow(extendedEvent.childProps.rowKeyValue)
+          )
+        },
+      }),
     },
   },
   paging: {
@@ -172,6 +299,7 @@ const tablePropsInit = {
       return <code>{value}</code>
     }
   },
+  selectedRows: [],
 }
 
 const _WorkerTable = ({ workers }) => {
@@ -180,7 +308,12 @@ const _WorkerTable = ({ workers }) => {
     changeTableProps((prevState) => kaReducer(prevState, action))
   }
 
-  return <Table data={workers} {...tableProps} dispatch={dispatch} />
+  return (
+    <>
+      <Table data={workers} {...tableProps} dispatch={dispatch} />
+      <p style={{ height: '100px' }} />
+    </>
+  )
 }
 
 const WorkerTable = dynamic(() => Promise.resolve(_WorkerTable), { ssr: false })
