@@ -187,23 +187,30 @@ const tablePropsInit = {
         const router = useRouter()
         const { id } = router.query
 
-        const restartRow = useCallback(async () => {
-          if (!window.confirm(`Restart selected workers?`)) {
-            return
-          }
+        const restartRow = useCallback(
+          async (forceRa) => {
+            if (!window.confirm(`Restart selected workers?`)) {
+              return
+            }
 
-          const { hasError, error } = await queryProxy(id, 'RestartWorker', {
-            ids: selectedRows,
-          })
+            const { hasError, error } = await queryProxy(
+              id,
+              forceRa ? 'RefreshRaAndRestartWorker' : 'RestartWorker',
+              {
+                ids: selectedRows,
+              }
+            )
 
-          if (hasError) {
-            console.error(error)
-          } else {
-            dispatch(deselectAllRows())
-          }
+            if (hasError) {
+              console.error(error)
+            } else {
+              dispatch(deselectAllRows())
+            }
 
-          window.alert(hasError ? error.toString() : 'Success!')
-        }, [selectedRows])
+            window.alert(hasError ? error.toString() : 'Success!')
+          },
+          [selectedRows]
+        )
 
         const killRow = useCallback(async () => {
           if (!window.confirm(`Kill selected workers?`)) {
@@ -235,14 +242,29 @@ const tablePropsInit = {
                 <Toast.Body>
                   <Stack gap={2}>
                     {!!selectedRows.length && (
-                      <ButtonGroup>
-                        <Button variant="danger" onClick={() => killRow()}>
-                          Kill
-                        </Button>
-                        <Button variant="warning" onClick={() => restartRow()}>
-                          Restart
-                        </Button>
-                      </ButtonGroup>
+                      <>
+                        <ButtonGroup>
+                          <Button
+                            variant="warning"
+                            onClick={() => restartRow(false)}
+                          >
+                            Restart
+                          </Button>
+                        </ButtonGroup>
+                        <ButtonGroup>
+                          <Button
+                            variant="warning"
+                            onClick={() => restartRow(true)}
+                          >
+                            Restart and Re-register
+                          </Button>
+                        </ButtonGroup>
+                        <ButtonGroup>
+                          <Button variant="danger" onClick={() => killRow()}>
+                            Kill
+                          </Button>
+                        </ButtonGroup>
+                      </>
                     )}
                     <ButtonGroup>
                       <Button
