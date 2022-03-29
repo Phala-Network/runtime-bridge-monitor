@@ -66,6 +66,7 @@ const EditModal = ({ title, onHide, initValue }) => {
           mnemonic: initValue.owner.mnemonic || '',
           realPhalaSs58: initValue.realPhalaSs58 || '',
           enabled: initValue.enabled,
+          syncOnly: initValue.syncOnly,
         }
       : {
           pid: '',
@@ -73,6 +74,7 @@ const EditModal = ({ title, onHide, initValue }) => {
           mnemonic: '',
           realPhalaSs58: '',
           enabled: true,
+          syncOnly: false,
         },
     validationSchema: Yup.object({
       pid: Yup.number().required('Required.'),
@@ -87,6 +89,7 @@ const EditModal = ({ title, onHide, initValue }) => {
         name: values.name.trim(),
         realPhalaSs58: values.realPhalaSs58.trim(),
         enabled: values.enabled,
+        syncOnly: values.syncOnly,
       }
       if (values.mnemonic.trim()) {
         item.owner = { mnemonic: values.mnemonic.trim() }
@@ -150,6 +153,15 @@ const EditModal = ({ title, onHide, initValue }) => {
                 label="Enable Pool"
                 onChange={form.handleChange}
                 checked={form.values.enabled}
+              />
+            </Form.Group>
+            <Form.Group controlId="enabled" className="position-relative">
+              <Form.Check
+                type="switch"
+                id="syncOnly"
+                label="Sync Only"
+                onChange={form.handleChange}
+                checked={form.values.syncOnly}
               />
             </Form.Group>
             <Form.Group controlId="pid" className="position-relative">
@@ -255,6 +267,12 @@ const tablePropsInit = {
       width: 260,
       dataType: DataType.String,
       inlineCode: true,
+    },
+    {
+      key: 'syncOnly',
+      title: 'Sync Only',
+      width: 100,
+      dataType: DataType.Boolean,
     },
     {
       key: 'enabled',

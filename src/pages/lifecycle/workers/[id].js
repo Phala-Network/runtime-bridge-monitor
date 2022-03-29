@@ -66,6 +66,7 @@ const EditModal = ({ title, onHide, initValue }) => {
           endpoint: initValue.endpoint,
           stake: initValue.stake,
           enabled: initValue.enabled,
+          syncOnly: initValue.syncOnly,
         }
       : {
           pid: '',
@@ -73,6 +74,7 @@ const EditModal = ({ title, onHide, initValue }) => {
           endpoint: '',
           stake: '',
           enabled: true,
+          syncOnly: false,
         },
     validationSchema: Yup.object({
       pid: Yup.number().required('Required.'),
@@ -87,6 +89,7 @@ const EditModal = ({ title, onHide, initValue }) => {
         endpoint: values.endpoint.trim(),
         stake: values.stake.trim(),
         enabled: values.enabled,
+        syncOnly: values.syncOnly,
       }
 
       setLoading(true)
@@ -148,6 +151,15 @@ const EditModal = ({ title, onHide, initValue }) => {
                 label="Enable Worker"
                 onChange={form.handleChange}
                 checked={form.values.enabled}
+              />
+            </Form.Group>
+            <Form.Group controlId="enabled" className="position-relative">
+              <Form.Check
+                type="switch"
+                id="syncOnly"
+                label="Sync Only(Override Pool)"
+                onChange={form.handleChange}
+                checked={form.values.syncOnly}
               />
             </Form.Group>
             <Form.Group controlId="pid" className="position-relative">
@@ -249,6 +261,12 @@ const tablePropsInit = {
       width: 260,
       dataType: DataType.String,
       inlineCode: true,
+    },
+    {
+      key: 'syncOnly',
+      title: 'Sync Only',
+      width: 100,
+      dataType: DataType.Boolean,
     },
     {
       key: 'enabled',
