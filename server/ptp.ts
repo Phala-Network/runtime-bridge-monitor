@@ -9,9 +9,9 @@ const listenAddresses = process.env.PTP_LISTEN_ADDRESSES
   ? process.env.PTP_LISTEN_ADDRESSES.split(',').map((i) => i.trim())
   : []
 
-const bootstrapAddresses = process.env.PTP_BOOT_NODES.split(',').map((i) =>
-  i.trim()
-)
+const bootstrapAddresses = (process.env.PTP_BOOT_NODES || '')
+  .split(',')
+  .map((i) => i.trim())
 
 export const createPtpContext = async () => {
   const peerId = await PeerId.create({ bits: 2048, keyType: 'RSA' })
