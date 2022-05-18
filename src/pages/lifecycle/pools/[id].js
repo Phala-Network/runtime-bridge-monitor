@@ -25,6 +25,7 @@ import {
   selectRow,
 } from 'ka-table/actionCreators'
 import { useFormik } from 'formik'
+import { usePeer } from '../../../utils/peer_list'
 import dynamic from 'next/dynamic'
 import * as Yup from 'yup'
 
@@ -35,8 +36,15 @@ import { useRouter } from 'next/router'
 import PageWrapper, { PageStatusOverlay } from '../../../components/PageWrapper'
 
 const LifecycleManagerPoolsPageWrapper = ({ children }) => {
+  const router = useRouter()
+  const { id } = router.query
+  const peer = usePeer(id)
+
   return (
-    <PageWrapper title={`Lifecycle Manager`} showLifecycleLinks>
+    <PageWrapper
+      title={peer ? `[${peer.hostname}] Pools` : `Pools`}
+      showLifecycleLinks
+    >
       <Container fluid={true}>{children}</Container>
     </PageWrapper>
   )

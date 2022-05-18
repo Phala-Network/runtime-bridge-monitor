@@ -1,5 +1,5 @@
 import { Col, Container, Dropdown, ListGroup, Stack } from 'react-bootstrap'
-import { useQuery } from 'react-query'
+import { usePeerList } from '../utils/peer_list'
 import PageWrapper, { PageStatusOverlay } from '../components/PageWrapper'
 
 const DiscoverPageWrapper = ({ children }) => {
@@ -107,12 +107,7 @@ const DiscoverPageData = ({ data }) => {
 }
 
 export default function DiscoverPage() {
-  const { isLoading, error, data } = useQuery(
-    'discover',
-    () => fetch('/ptp/discover', { method: 'POST' }).then((res) => res.json()),
-    { refetchInterval: 1500 }
-  )
-
+  const { isLoading, data, error } = usePeerList()
   return (
     <DiscoverPageWrapper>
       {data && !data?.hasError && <DiscoverPageData data={data} />}

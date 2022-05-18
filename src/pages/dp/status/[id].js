@@ -1,12 +1,19 @@
 import { Badge, Col, Container, Row, Stack, Table } from 'react-bootstrap'
 import { useMemo } from 'react'
+import { usePeer } from '../../../utils/peer_list'
 import { useQuery } from 'react-query'
 import { useRouter } from 'next/router'
 import PageWrapper, { PageStatusOverlay } from '../../../components/PageWrapper'
 
 const DataProviderStatusPageWrapper = ({ children }) => {
+  const router = useRouter()
+  const { id } = router.query
+  const peer = usePeer(id)
+
   return (
-    <PageWrapper title={`Data Provider`}>
+    <PageWrapper
+      title={peer ? `[${peer.hostname}] Data Provider` : `Data Provider`}
+    >
       <Container fluid="xxl">
         <Container>{children}</Container>
       </Container>

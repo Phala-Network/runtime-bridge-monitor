@@ -22,6 +22,7 @@ import {
   deselectRow,
   selectRow,
 } from 'ka-table/actionCreators'
+import { usePeer } from '../../../utils/peer_list'
 import dynamic from 'next/dynamic'
 
 import { queryProxy } from '../../../utils/query'
@@ -31,8 +32,15 @@ import { useRouter } from 'next/router'
 import PageWrapper, { PageStatusOverlay } from '../../../components/PageWrapper'
 
 const LifecycleManagerStatusPageWrapper = ({ children }) => {
+  const router = useRouter()
+  const { id } = router.query
+  const peer = usePeer(id)
+
   return (
-    <PageWrapper title={`Lifecycle Manager`} showLifecycleLinks>
+    <PageWrapper
+      title={peer ? `[${peer.hostname}] Worker Status` : `Worker Status`}
+      showLifecycleLinks
+    >
       <Container fluid={true}>{children}</Container>
     </PageWrapper>
   )

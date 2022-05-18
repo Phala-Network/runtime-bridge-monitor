@@ -4,16 +4,32 @@ import 'ka-table/style.css'
 
 import '../styles/globals.css'
 
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { PeerListContext } from '../utils/peer_list'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import SSRProvider from 'react-bootstrap/SSRProvider'
 
 const queryClient = new QueryClient()
+
+const PeerListWrapper = ({ children }) => {
+  const query = useQuery(
+    'discover',
+    () => fetch('/ptp/discover', { method: 'POST' }).then((res) => res.json()),
+    { refetchInterval: 1500 }
+  )
+  return (
+    <PeerListContext.Provider value={query}>
+      {children}
+    </PeerListContext.Provider>
+  )
+}
 
 function MyApp({ Component, pageProps }) {
   return (
     <SSRProvider>
       <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
+        <PeerListWrapper>
+          <Component {...pageProps} />
+        </PeerListWrapper>
       </QueryClientProvider>
     </SSRProvider>
   )
