@@ -373,7 +373,6 @@ const _WorkerTable = ({ workers }) => {
     changeTableProps((prevState) => kaReducer(prevState, action))
   }
 
-  console.log(workers)
   return (
     <>
       <Table data={workers} {...tableProps} dispatch={dispatch} />
