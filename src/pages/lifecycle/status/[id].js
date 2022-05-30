@@ -81,6 +81,13 @@ const tablePropsInit = {
       inlineCode: true,
     },
     {
+      key: 'minerInfo.state',
+      title: 'On-chain State',
+      width: 180,
+      dataType: DataType.String,
+      inlineCode: true,
+    },
+    {
       key: 'lastMessage',
       title: 'Last Message',
       isResizable: true,
@@ -117,13 +124,6 @@ const tablePropsInit = {
       inlineCode: true,
     },
     {
-      key: 'minerInfo.state',
-      title: 'On-chain State',
-      width: 180,
-      dataType: DataType.String,
-      inlineCode: true,
-    },
-    {
       key: 'minerInfo.v',
       title: 'V',
       width: 180,
@@ -155,6 +155,41 @@ const tablePropsInit = {
       key: 'minerInfo.raw.stats.totalReward',
       title: 'Minted(BN)',
       width: 220,
+      dataType: DataType.String,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.runtimeInfo.version',
+      title: 'Runtime Version',
+      width: 180,
+      dataType: DataType.String,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.runtimeInfo.gitRevision',
+      title: 'Runtime Git Revision',
+      width: 400,
+      dataType: DataType.String,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.runtimeInfo.memoryUsage.rustPeakUsed',
+      title: 'Memory(rustPeakUsed)',
+      width: 200,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.runtimeInfo.memoryUsage.rustUsed',
+      title: 'Memory(rustUsed)',
+      width: 200,
+      dataType: DataType.Number,
+      inlineCode: true,
+    },
+    {
+      key: 'minerInfo.runtimeInfo.memoryUsage.totalPeakUsed',
+      title: 'Memory(totalPeakUsed)',
+      width: 200,
       dataType: DataType.Number,
       inlineCode: true,
     },
@@ -338,6 +373,7 @@ const _WorkerTable = ({ workers }) => {
     changeTableProps((prevState) => kaReducer(prevState, action))
   }
 
+  console.log(workers)
   return (
     <>
       <Table data={workers} {...tableProps} dispatch={dispatch} />
