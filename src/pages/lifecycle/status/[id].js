@@ -152,7 +152,7 @@ const tablePropsInit = {
       inlineCode: true,
     },
     {
-      key: 'minerInfo.raw.stats.totalReward',
+      key: 'minerInfo.stats.totalReward',
       title: 'Minted(BN)',
       width: 220,
       dataType: DataType.String,
