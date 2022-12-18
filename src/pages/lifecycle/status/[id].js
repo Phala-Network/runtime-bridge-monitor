@@ -81,7 +81,7 @@ const tablePropsInit = {
       inlineCode: true,
     },
     {
-      key: 'minerInfo.state',
+      key: 'sessionInfo.state',
       title: 'On-chain State',
       width: 180,
       dataType: DataType.String,
@@ -124,78 +124,78 @@ const tablePropsInit = {
       inlineCode: true,
     },
     {
-      key: 'minerInfo.v',
+      key: 'sessionInfo.v',
       title: 'V',
       width: 180,
       dataType: DataType.Number,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.ve',
+      key: 'sessionInfo.ve',
       title: 'Ve',
       width: 180,
       dataType: DataType.Number,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.raw.benchmark.pInstant',
+      key: 'sessionInfo.raw.benchmark.pInstant',
       title: 'pInstant',
       width: 120,
       dataType: DataType.Number,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.raw.benchmark.pInit',
+      key: 'sessionInfo.raw.benchmark.pInit',
       title: 'pInit',
       width: 120,
       dataType: DataType.Number,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.stats.totalReward',
+      key: 'sessionInfo.stats.totalReward',
       title: 'Minted(BN)',
       width: 220,
       dataType: DataType.String,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.runtimeInfo.version',
+      key: 'sessionInfo.runtimeInfo.version',
       title: 'Runtime Version',
       width: 180,
       dataType: DataType.String,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.runtimeInfo.gitRevision',
+      key: 'sessionInfo.runtimeInfo.gitRevision',
       title: 'Runtime Git Revision',
       width: 400,
       dataType: DataType.String,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.runtimeInfo.memoryUsage.rustPeakUsed',
+      key: 'sessionInfo.runtimeInfo.memoryUsage.rustPeakUsed',
       title: 'Memory(rustPeakUsed)',
       width: 200,
       dataType: DataType.Number,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.runtimeInfo.memoryUsage.rustUsed',
+      key: 'sessionInfo.runtimeInfo.memoryUsage.rustUsed',
       title: 'Memory(rustUsed)',
       width: 200,
       dataType: DataType.Number,
       inlineCode: true,
     },
     {
-      key: 'minerInfo.runtimeInfo.memoryUsage.totalPeakUsed',
+      key: 'sessionInfo.runtimeInfo.memoryUsage.totalPeakUsed',
       title: 'Memory(totalPeakUsed)',
       width: 200,
       dataType: DataType.Number,
       inlineCode: true,
     },
     {
-      key: 'minerAccountId',
-      title: 'Miner Account',
+      key: 'workerAccountId',
+      title: 'Session Account',
       width: 420,
       dataType: DataType.String,
       inlineCode: true,
@@ -398,7 +398,7 @@ const LifecycleManagerStatusPage = () => {
     _workers.forEach((r) => {
       Object.assign(r, r.worker)
       r.id = r.uuid
-      r.minerInfo = JSON.parse(r.minerInfoJson || '{}')
+      r.sessionInfo = JSON.parse(r.sessionInfoJson || '{}')
     })
     return _workers
   }, [_workers])
