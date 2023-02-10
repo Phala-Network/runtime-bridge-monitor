@@ -78,7 +78,7 @@ const DataProviderStatusPage = () => {
     id,
     () =>
       fetch(`/ptp/proxy/${id}/GetDataProviderInfo`).then((res) => res.json()),
-    { refetchInterval: 1500 }
+    { refetchInterval: 1000 }
   )
 
   return (
