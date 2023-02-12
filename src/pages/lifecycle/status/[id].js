@@ -390,7 +390,7 @@ const LifecycleManagerStatusPage = () => {
   const { isLoading, error, data } = useQuery(
     id,
     () => queryProxy(id, 'GetWorkerStatus', {}),
-    { refetchInterval: 3000 }
+    { refetchInterval: 1000 }
   )
 
   const _workers = data?.data?.workerStates || []
